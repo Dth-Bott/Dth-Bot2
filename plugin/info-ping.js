@@ -12,7 +12,7 @@ const handler = async (m, { conn, usedPrefix, isOwner, isAdmin }) => {
     const speed = (endTime - startTime).toFixed(2)
 
     const textMsg = `
-╭─[ ⚡ PING NODE ]
+╭─[ ⚡ PING ⚡ ]
 │ ▸ Status : ONLINE
 │ ▸ Uptime : ${uptimeStr}
 │ ▸ Delay  : ${speed} ms
