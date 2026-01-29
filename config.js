@@ -13,34 +13,34 @@ const moduleCache = new NodeCache({ stdTTL: 300 });
 
 /*⭑⭒━━━✦❘༻☾⋆⁺₊✧ 𝓿𝓪𝓻𝓮𝓫𝓸𝓽 ✧₊⁺⋆☽༺❘✦━━━⭒⭑*/
 
-global.sam = ['393476686131',]
+global.sam = ['212773631903',]
 global.owner = [
-  ['393476686131', 'sam', true],
-  ['393511082922', 'gio', true],
-  ['393392645292', 'mavko', true],
-  ['67078163216', 'Felix', true],
-  ['393514357738', 'vare', true],
+  ['212773631903', '𝕯𝖊ⱥ𝖉𝖑𝐲', true],
+  ['212601646793', 'zein', true],
+  ['393801380688', 'vixiie', true],
+  ['xxxxxxxxxx'],
+  ['xxxxxxxxxx'],
 ]
-global.mods = ['393476686131', '393511082922', '67078163216']
-global.prems = ['393476686131', '393511082922', '67078163216']
+global.mods = ['xxxxxxxxxx', 'xxxxxxxxxx', 'xxxxxxxxxx']
+global.prems = ['xxxxxxxxxx', 'xxxxxxxxxx', 'xxxxxxxxxx']
 
 /*⭑⭒━━━✦❘༻🩸 INFO BOT 🕊️༺❘✦━━━⭒⭑*/
 
-global.nomepack = 'vare ✧ bot'
-global.nomebot = '✧˚🩸 varebot 🕊️˚✧'
-global.wm = 'vare ✧ bot'
-global.autore = '𝐬𝐚𝐦'
-global.dev = '⋆｡˚- 𝐬𝐚𝐦'
-global.testobot = `༻⋆⁺₊𝓿𝓪𝓻𝓮𝓫𝓸𝓽₊⁺⋆༺`
+global.nomepack = 'ᴅᴛʜ-ʙᴏᴛ'
+global.nomebot = 'ᴅᴛʜ-ʙᴏᴛ'
+global.wm = 'ᴅᴛʜ-ʙᴏᴛ'
+global.autore = '𝕯𝖊ⱥ𝖉𝖑𝐲'
+global.dev = '𝕯𝖊ⱥ𝖉𝖑𝐲'
+global.testobot = `ᴅᴛʜ-ʙᴏᴛ`
 global.versione = pkg.version
 global.errore = '⚠️ *Errore inatteso!* Usa il comando `.segnala _errore_` per avvisare lo sviluppatore.'
 
 /*⭑⭒━━━✦❘༻🌐 LINK 🌐༺❘✦━━━⭒⭑*/
 
-global.repobot = 'https://github.com/realvare/varebot'
-global.gruppo = 'https://chat.whatsapp.com/bysamakavare'
-global.canale = 'https://whatsapp.com/channel/0029VbB41Sa1Hsq1JhsC1Z1z'
-global.insta = 'https://www.instagram.com/samakavare'
+global.repobot = 'https://github.com/dthbot/Bot-Dth'
+global.gruppo = ''
+global.canale = ''
+global.insta = 'https://www.instagram.com/darius._.n'
 
 /*⭑⭒━━━✦❘༻ MODULI ༺❘✦━━━⭒⭑*/
 
