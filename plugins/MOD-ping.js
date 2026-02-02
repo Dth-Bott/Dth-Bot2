@@ -39,7 +39,7 @@ let handler = async (m, { conn, usedPrefix }) => {
 
     await conn.sendMessage(m.chat, {
       text: textMsg,
-      footer: "𝑷𝑰𝑵𝑮 𝑩𝒀 𝑫𝑻𝑯-𝑩𝑶𝑻",
+      footer: "𝑷𝑰𝑵𝑮 𝑩𝒀 𝐒𝚫𝐂𝐑𝐈𝐅𝐈𝐂𝚵 𝚩𝚯𝐓",
       buttons: [
         { buttonId: usedPrefix + "dsmod", buttonText: { displayText: "🗑️ 𝐒𝐯𝐮𝐨𝐭𝐚 𝐒𝐞𝐬𝐬𝐢𝐨𝐧𝐢" }, type: 1 },
         { buttonId: usedPrefix + "pingmod", buttonText: { displayText: "📡 𝐑𝐢𝐟𝐚𝐢 𝐩𝐢𝐧𝐠" }, type: 1 }
