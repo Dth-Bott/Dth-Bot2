@@ -1,17 +1,14 @@
 import { WAMessageStubType } from '@realvare/based'
 import axios from 'axios'
 
-/* =======================
-   INIT
-======================= */
 export async function before(m, { conn, groupMetadata }) {
-    // Solo gruppi con eventi
     if (!m.isGroup || !m.messageStubType) return true
 
     const chat = global.db?.data?.chats?.[m.chat]
     if (!chat) return true
 
-    const who = m.messageStubParameters?.[0]
+    // Ottieni l'utente target: prima da messageStubParameters, poi da participant
+    let who = m.messageStubParameters?.[0] || m.participant
     if (!who) return true
 
     const jid = conn.decodeJid(who)
