@@ -821,18 +821,17 @@ global.dfail = async (type, m, conn) => {
     const nome = m.pushName || 'sam'
     const etarandom = Math.floor(Math.random() * 21) + 13
     const msg = {
-        sam: '- 〘 🔒 〙 *`ꪶ͢Comando riservato esclusivamente al creatoreꫂ`*',
-        rowner: '- 〘 👑 〙- *`ꪶ͢Solo il creatore del bot può usare questa funzioneꫂ`*',
-        owner: '- 〘 🛡️ 〙 *`ꪶ͢Solo gli owner del bot possono usare questa funzioneꫂ`*',
-        mods: '- 〘 ⚙️ 〙 *`ꪶ͢Solo i moderatori possono usare questo comandoꫂ`*',
-        premium: '- 〘 💎 〙 *`ꪶ͢Solo gli utenti premium possono usare questo comandoꫂ`*',
-        group: '- 〘 👥 〙 *`ꪶ͢Questo comando va usato solo nei gruppiꫂ`*',
-        private: '- 〘 📩 〙 *`ꪶ͢Questa funzione può essere usata solo in privatoꫂ`*',
-        admin: '- 〘 🛠️ 〙 *`ꪶ͢Solo gli admin del gruppo possono usare questo comandoꫂ`*',
-        botAdmin: '- 〘 🤖 〙 *`ꪶ͢Devo essere admin per eseguire questo comandoꫂ`*',
-        unreg: `- 〘 📛 〙 *\`ꪶ͢Non sei registrato/a, registrati per usare questa funzioneꫂ\`*\n> *\`ꪶ͢Formato: nome etàꫂ\`*\n\n *_esempio:_*\n *\`.reg ${nome} ${etarandom}\`*`,
-        restrict: '- 〘 🚫 〙 *`ꪶ͢Questa funzione è attualmente disattivataꫂ`*',
-        disabled: '- 〘 🚫 〙 *`ꪶ͢Questo comando è attualmente disabilitatoꫂ`*'
+        sam: '🔒 *Comando riservato esclusivamente al creatore*',
+        rowner: '👑 *Solo il creatore del bot può usare questa funzione*',
+        owner: '🛡️ *Solo gli owner del bot possono usare questa funzione*',
+        mods: '⚙️ *Solo i moderatori possono usare questo comando*',
+        premium: '💎 *Solo gli utenti premium possono usare questo comando*',
+        group: '👥 *Questo comando va usato solo nei gruppi',
+        private: '📩 *Questa funzione può essere usata solo in privato*',
+        admin: '🛠️ *Solo gli admin del gruppo possono usare questo comando*',
+        botAdmin: '🤖 *Devo essere admin per eseguire questo comando*',
+        restrict: '🚫 *Questa funzione è attualmente disattivata*',
+        disabled: '🚫 *Questo comando è attualmente disabilitato*'
     }[type]
     if (msg) {
         conn.reply(m.chat, msg, m, global.rcanal).catch(e => console.error('[ERRORE] Errore in dfail:', e))
