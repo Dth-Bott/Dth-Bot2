@@ -19,7 +19,6 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 🏰 𝐂𝐎𝐌𝐀𝐍𝐃𝐈 𝐏𝐑𝐈𝐍𝐂𝐈𝐏𝐀𝐋𝐈
 ➤ ${usedPrefix}ping         ⚡ Verifica il bot
 ➤ ${usedPrefix}staff        🛡️ Staff e moderatori
-➤ ${usedPrefix}creatore     👑 Info sul creatore
 
 🔮 𝐀𝐋𝐓𝐑𝐈 𝐌𝐄𝐍𝐔
 ➤ ${usedPrefix}menumod      🧙 Menu Moderatori
