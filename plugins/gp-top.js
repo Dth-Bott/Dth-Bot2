@@ -1,24 +1,22 @@
-let handler = async (m, { conn }) => {
-  let users = global.db?.data?.users
-  if (!users || Object.keys(users).length === 0)
-    return m.reply('Nessun dato utenti trovato.')
+let handler = async (m, { conn, participants }) => {
+  if (!m.isGroup) return m.reply('Questo comando funziona solo nei gruppi.')
+
+  let users = global.db.data.users
+  let groupId = m.chat
 
   let top = Object.entries(users)
     .map(([jid, data]) => {
-      let total =
-        data.messages ??
-        data.chat ??
-        data.msg ??
-        0
+      let total = data.chats?.[groupId]?.chat || 0
       return [jid, total]
     })
+    .filter(([jid, total]) => total > 0)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
 
   if (!top.length)
-    return m.reply('Nessun messaggio registrato.')
+    return m.reply('Nessun messaggio registrato in questo gruppo.')
 
-  let text = '🏆 *TOP 5 UTENTI PIÙ ATTIVI*\n\n'
+  let text = '🏆 *TOP 5 DEL GRUPPO*\n\n'
   let mentions = []
 
   top.forEach(([jid, total], i) => {
@@ -36,6 +34,4 @@ let handler = async (m, { conn }) => {
 
 handler.command = ['top']
 handler.tags = ['stats']
-handler.help = ['top']
-
 export default handler
