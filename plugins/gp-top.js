@@ -6,21 +6,28 @@ let handler = async (m, { conn }) => {
   if (!db.users) return m.reply('Database utenti vuoto.')
 
   let users = Object.entries(db.users)
+  if (!users.length) return m.reply('Nessun dato disponibile.')
 
-  if (users.length === 0) return m.reply('Nessun dato disponibile.')
-
-  // Ordina per numero messaggi (decrescente)
   let top = users
     .sort((a, b) => (b[1].messages || 0) - (a[1].messages || 0))
     .slice(0, 5)
 
   let text = '🏆 *TOP 5 UTENTI PIÙ ATTIVI*\n\n'
 
-  top.forEach(([jid, data], i) => {
-    let name = conn.getName(jid)
-    let total = data.messages || 0
-    text += `${i + 1}. ${name}\n   💬 Messaggi: ${total}\n\n`
-  })
+  for (let i = 0; i < top.length; i++) {
+    let [jid, data] = top[i]
+
+    // Prova a ottenere il nome
+    let name = await conn.getName(jid)
+
+    // Se il nome è sballato → usa il numero
+    if (!name || name.includes('@') || name === jid) {
+      name = jid.split('@')[0]
+    }
+
+    text += `${i + 1}. ${name}\n`
+    text += `   💬 Messaggi: ${data.messages || 0}\n\n`
+  }
 
   m.reply(text)
 }
