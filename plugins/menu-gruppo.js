@@ -17,9 +17,6 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 🖼️ 𝐌𝐄𝐃𝐈𝐀 & 𝐆𝐑𝐀𝐅𝐈𝐂𝐀
 ➤ ${usedPrefix}s / sticker
 ➤ ${usedPrefix}wm
-➤ ${usedPrefix}png
-➤ ${usedPrefix}hd
-➤ ${usedPrefix}rimuovisfondo
 
 🎮 𝐆𝐈𝐎𝐂𝐇𝐈 & 𝐑𝐀𝐍𝐃𝐎𝐌
 ➤ ${usedPrefix}tris ⭕
