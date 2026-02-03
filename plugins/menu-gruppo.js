@@ -10,9 +10,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ════════════════════
 🌍 𝐈𝐍𝐅𝐎 & 𝐔𝐓𝐈𝐋𝐈𝐓À
 ➤ ${usedPrefix}meteo (città)
-➤ ${usedPrefix}orario (città)
 ➤ ${usedPrefix}bus (città)
-➤ ${usedPrefix}id
 ➤ ${usedPrefix}pic [@]
 ➤ ${usedPrefix}fp [numero]
 
