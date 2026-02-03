@@ -1,21 +1,10 @@
-import fs from 'fs'
-
 let handler = async (m, { conn }) => {
-  let db = JSON.parse(fs.readFileSync('./database.json'))
-
-  // prova tutte le strutture comuni
-  let users =
-    db.users ||
-    db.data?.users ||
-    db.data ||
-    db
+  let users = global.db?.data?.users
 
   if (!users || Object.keys(users).length === 0)
-    return m.reply('Nessun utente trovato nel database.')
+    return m.reply('Nessun dato utenti trovato.')
 
-  let list = Object.entries(users)
-
-  let top = list
+  let top = Object.entries(users)
     .map(([jid, data]) => {
       let total =
         data.messages ??
@@ -27,6 +16,9 @@ let handler = async (m, { conn }) => {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
 
+  if (!top.length)
+    return m.reply('Nessun messaggio registrato.')
+
   let text = '🏆 *TOP 5 UTENTI PIÙ ATTIVI*\n\n'
 
   for (let i = 0; i < top.length; i++) {
@@ -34,6 +26,7 @@ let handler = async (m, { conn }) => {
 
     let name =
       data.name ||
+      data.pushName ||
       (await conn.getName(jid)) ||
       jid.split('@')[0]
 
