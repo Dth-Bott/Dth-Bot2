@@ -3,30 +3,44 @@ import fs from 'fs'
 let handler = async (m, { conn }) => {
   let db = JSON.parse(fs.readFileSync('./database.json'))
 
-  if (!db.users) return m.reply('Database utenti vuoto.')
+  // prova tutte le strutture comuni
+  let users =
+    db.users ||
+    db.data?.users ||
+    db.data ||
+    db
 
-  let users = Object.entries(db.users)
-  if (!users.length) return m.reply('Nessun dato disponibile.')
+  if (!users || Object.keys(users).length === 0)
+    return m.reply('Nessun utente trovato nel database.')
 
-  let top = users
-    .sort((a, b) => (b[1].messages || 0) - (a[1].messages || 0))
+  let list = Object.entries(users)
+
+  let top = list
+    .map(([jid, data]) => {
+      let total =
+        data.messages ??
+        data.chat ??
+        data.msg ??
+        0
+      return [jid, total, data]
+    })
+    .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
 
   let text = '🏆 *TOP 5 UTENTI PIÙ ATTIVI*\n\n'
 
   for (let i = 0; i < top.length; i++) {
-    let [jid, data] = top[i]
+    let [jid, total, data] = top[i]
 
-    // Prova a ottenere il nome
-    let name = await conn.getName(jid)
+    let name =
+      data.name ||
+      (await conn.getName(jid)) ||
+      jid.split('@')[0]
 
-    // Se il nome è sballato → usa il numero
-    if (!name || name.includes('@') || name === jid) {
-      name = jid.split('@')[0]
-    }
+    if (!name || name.includes('@')) name = jid.split('@')[0]
 
     text += `${i + 1}. ${name}\n`
-    text += `   💬 Messaggi: ${data.messages || 0}\n\n`
+    text += `   💬 Messaggi: ${total}\n\n`
   }
 
   m.reply(text)
