@@ -1,6 +1,5 @@
 let handler = async (m, { conn }) => {
   let users = global.db?.data?.users
-
   if (!users || Object.keys(users).length === 0)
     return m.reply('Nessun dato utenti trovato.')
 
@@ -11,7 +10,7 @@ let handler = async (m, { conn }) => {
         data.chat ??
         data.msg ??
         0
-      return [jid, total, data]
+      return [jid, total]
     })
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
@@ -20,23 +19,19 @@ let handler = async (m, { conn }) => {
     return m.reply('Nessun messaggio registrato.')
 
   let text = '🏆 *TOP 5 UTENTI PIÙ ATTIVI*\n\n'
+  let mentions = []
 
-  for (let i = 0; i < top.length; i++) {
-    let [jid, total, data] = top[i]
-
-    let name =
-      data.name ||
-      data.pushName ||
-      (await conn.getName(jid)) ||
-      jid.split('@')[0]
-
-    if (!name || name.includes('@')) name = jid.split('@')[0]
-
-    text += `${i + 1}. ${name}\n`
+  top.forEach(([jid, total], i) => {
+    mentions.push(jid)
+    text += `${i + 1}. @${jid.split('@')[0]}\n`
     text += `   💬 Messaggi: ${total}\n\n`
-  }
+  })
 
-  m.reply(text)
+  await conn.sendMessage(
+    m.chat,
+    { text, mentions },
+    { quoted: m }
+  )
 }
 
 handler.command = ['top']
