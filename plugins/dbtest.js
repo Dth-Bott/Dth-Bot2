@@ -1,15 +1,15 @@
 import fs from 'fs'
 
 let handler = async (m) => {
-  let db = JSON.parse(fs.readFileSync('./database.json'))
-  let keys = Object.keys(db)
+  let raw = fs.readFileSync('./database.json', 'utf8')
 
-  let text = '*DEBUG DATABASE*\n\n'
-  text += 'Chiavi root:\n'
-  text += keys.slice(0, 10).join('\n')
+  let text = '*DEBUG AVANZATO*\n\n'
+  text += 'Lunghezza file: ' + raw.length + '\n\n'
+  text += 'Prime 300 lettere:\n'
+  text += raw.slice(0, 300)
 
   m.reply(text)
 }
 
-handler.command = ['dbtest']
+handler.command = ['dbtest2']
 export default handler
