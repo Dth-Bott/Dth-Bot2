@@ -20,7 +20,6 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 
 🎮 𝐆𝐈𝐎𝐂𝐇𝐈 & 𝐑𝐀𝐍𝐃𝐎𝐌
 ➤ ${usedPrefix}tris ⭕
-➤ ${usedPrefix}dado 🎲
 ➤ ${usedPrefix}slot 🎰
 ➤ ${usedPrefix}bandiera 🏳️
 ➤ ${usedPrefix}classificabandiera 🚩
