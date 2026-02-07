@@ -1,45 +1,36 @@
 const handler = async (m, { conn, isOwner, isAdmin }) => {
 
-  // 🔐 SOLO ADMIN / OWNER
   if (!isOwner && !isAdmin) {
-    return m.reply('⛔ *Solo gli admin possono usare questo comando*')
+    return m.reply('⛔ *Solo admin*')
   }
 
-  if (!m.isGroup) {
-    return m.reply('❌ *Questo comando funziona solo nei gruppi*')
-  }
+  if (!m.isGroup) return
 
   try {
-    // Ottiene la lista delle richieste
-    const requests = await conn.groupRequestParticipantsList(m.chat)
+    const res = await conn.groupRequestParticipantsList(m.chat)
 
-    if (!requests || requests.length === 0) {
-      return m.reply('✅ *Non ci sono richieste in sospeso*')
+    if (!res.length) {
+      return m.reply('✅ *Nessuna richiesta da accettare*')
     }
 
-    // Estrae i JID
-    const users = requests.map(v => v.jid)
+    for (let user of res) {
+      await conn.groupRequestParticipantsUpdate(
+        m.chat,
+        [user.jid],
+        'approve'
+      )
+    }
 
-    // Accetta tutte le richieste
-    await conn.groupRequestParticipantsUpdate(
-      m.chat,
-      users,
-      'approve'
-    )
-
-    m.reply(`✅ *Accettate ${users.length} richieste*`)
+    m.reply(`✅ *Accettate ${res.length} richieste*`)
 
   } catch (e) {
-    console.error('Errore .accetta:', e)
-    m.reply('❌ *Errore durante l’accettazione delle richieste*')
+    console.error(e)
+    m.reply('❌ *Il tuo bot non supporta le richieste di ingresso*')
   }
 }
 
-handler.help = ['accetta']
-handler.tags = ['group']
 handler.command = /^accetta$/i
 handler.group = true
 handler.botAdmin = true
-handler.admin = false
 
 export default handler
