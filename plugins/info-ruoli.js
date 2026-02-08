@@ -1,32 +1,28 @@
 const handler = m => m;
 
-handler.before = async function (message, { conn }) {
-  const chat = global.db.data.chats[message.chat] || {};
-  const detectEnabled = chat.detect;
+async function handlePromotion(message) {
+  const text = `@${message.sender.split('@')[0]} ha dato i poteri a @${message.messageStubParameters[0].split('@')[0]}`;
+  
+  await conn.sendMessage(message.chat, {
+    text,
+    mentions: [message.sender, message.messageStubParameters[0]]
+  });
+}
 
-  if (!detectEnabled) return;
+async function handleDemotion(message) {
+  const text = `@${message.sender.split('@')[0]} ha levato i poteri a @${message.messageStubParameters[0].split('@')[0]}`;
+  
+  await conn.sendMessage(message.chat, {
+    text,
+    mentions: [message.sender, message.messageStubParameters[0]]
+  });
+}
 
-  // prende sempre il JID corretto di chi ha fatto l'azione
-  const sender = message.participant || message.sender;
-
-  // PROMOZIONE (admin dato)
-  if (message.messageStubType === 29) {
-    const promotedUser = message.messageStubParameters[0];
-
-    await conn.sendMessage(message.chat, {
-      text: `🩸 *@${sender.split('@')[0]}* 𝐡𝐚 𝐝𝐚𝐭𝐨 𝐢 𝐩𝐨𝐭𝐞𝐫𝐢 𝐚 *@${promotedUser.split('@')[0]}*`,
-      mentions: [sender, promotedUser]
-    });
-  }
-
-  // RETROCESSIONE (admin tolto)
-  if (message.messageStubType === 30) {
-    const demotedUser = message.messageStubParameters[0];
-
-    await conn.sendMessage(message.chat, {
-      text: `⛓️ *@${sender.split('@')[0]}* 𝐡𝐚 𝐭𝐨𝐥𝐭𝐨 𝐢 𝐩𝐨𝐭𝐞𝐫𝐢 𝐚 *@${demotedUser.split('@')[0]}*`,
-      mentions: [sender, demotedUser]
-    });
+handler.all = async function(m) {
+  if (m.messageStubType === 29) {
+    await handlePromotion(m);
+  } else if (m.messageStubType === 30) {
+    await handleDemotion(m);
   }
 };
 
