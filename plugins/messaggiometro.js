@@ -47,10 +47,8 @@ export async function before(m, { conn }) {
         id: "Sacrifice"
       },
       message: {
-        locationMessage: {
-          name: `🔥 𝐂𝐥𝐨𝐬𝐭𝐢𝐧𝐚 𝐝𝐞𝐥 𝐒𝐚𝐜𝐫𝐢𝐟𝐢𝐜𝐢𝐨 🔥`,
-          jpegThumbnail: await (await import('fs').then(fs => fs.promises.readFile('icone/sacrifice.png'))),
-          vcard: `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`
+        textMessage: {
+          text: `🔥 **Sacrificio del Potere!** 🔥\n\nUn nuovo sacrificio è stato completato da *@${m.sender.split('@')[0]}*!\n🎯 Grado: *${nuovoGrado.nome}*\n💬 Messaggi inviati: *${user.messaggi}*\n💰 *${reward}€* sono stati offerti al culto della Sacrificio.\n\nUn altro passo verso il potere supremo. Che il sacrificio continui...`
         }
       },
       participant: "0@s.whatsapp.net"
