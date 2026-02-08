@@ -8,7 +8,7 @@ async function handlePromotion(message) {
 `🩸 𝐑𝐈𝐓𝐎 𝐃𝐈 𝐀𝐒𝐂𝐄𝐒𝐀 🩸
 
 ✦ *@${giver}*
-ha conferito i **𝒑𝒐𝒕𝒆𝒓𝒊 𝒐𝒔𝒄𝒖𝒓𝒊** a
+ha conferito i *𝒑𝒐𝒕𝒆𝒓𝒊 𝒐𝒔𝒄𝒖𝒓𝒊* a
 ✦ *@${receiver}*
 
 🔥 Il sacrificio è stato accettato.`;
@@ -27,7 +27,7 @@ async function handleDemotion(message) {
 `⛓️ 𝐑𝐈𝐓𝐎 𝐃𝐈 𝐂𝐀𝐃𝐔𝐓𝐀 ⛓️
 
 ✦ *@${giver}*
-ha strappato i **𝒑𝒐𝒕𝒆𝒓𝒊** a
+ha strappato i *𝒑𝒐𝒕𝒆𝒓𝒊* a
 ✦ *@${receiver}*
 
 🕯️ Il sacrificio è compiuto.`;
