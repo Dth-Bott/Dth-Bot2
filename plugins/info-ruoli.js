@@ -1,13 +1,12 @@
-export async function onParticipantsUpdate(update, { conn }) {
-  const { id, participants, action, author } = update
+export async function participantsUpdate(m, { conn }) {
+  const { id, participants, action, author } = m
 
-  // serve solo nei gruppi
   if (!id || !participants || !author) return
 
-  // promozione admin
+  // PROMOZIONE ADMIN
   if (action === 'promote') {
     for (let user of participants) {
-      conn.sendMessage(
+      await conn.sendMessage(
         id,
         {
           text: `🩸 *@${author.split('@')[0]}* ha donato i poteri a *@${user.split('@')[0]}*`,
@@ -17,10 +16,10 @@ export async function onParticipantsUpdate(update, { conn }) {
     }
   }
 
-  // retrocessione admin
+  // RETROCESSIONE ADMIN
   if (action === 'demote') {
     for (let user of participants) {
-      conn.sendMessage(
+      await conn.sendMessage(
         id,
         {
           text: `⛓️ *@${author.split('@')[0]}* ha tolto i poteri a *@${user.split('@')[0]}*`,
