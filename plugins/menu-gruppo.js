@@ -69,7 +69,6 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}dona 👤
 
 🎭 𝐕𝐀𝐑𝐈𝐄
-➤ ${usedPrefix}ic 🎼
 ➤ ${usedPrefix}auto 🚗
 ➤ ${usedPrefix}cur 🎶
 ➤ ${usedPrefix}sigaretta 🚬
@@ -79,7 +78,6 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}pizza 🍕
 ➤ ${usedPrefix}winx 🧚🏿
 ➤ ${usedPrefix}gratta 🌟
-➤ ${usedPrefix}mossad
 ➤ ${usedPrefix}agejob [anni]
 
 🔞 𝐍𝐒𝐅𝐖
