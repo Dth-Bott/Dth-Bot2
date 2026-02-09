@@ -72,7 +72,6 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}auto 🚗
 ➤ ${usedPrefix}cur 🎶
 ➤ ${usedPrefix}sigaretta 🚬
-➤ ${usedPrefix}startblast 🚦
 ➤ ${usedPrefix}mc 🍔
 ➤ ${usedPrefix}gelato 🍦
 ➤ ${usedPrefix}pizza 🍕
