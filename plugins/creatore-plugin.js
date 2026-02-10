@@ -7,11 +7,14 @@ const __dirname = path.dirname(__filename)
 
 let handler = async (m, { conn, text, isOwner }) => {
   if (!text) {
-    return conn.reply(m.chat, '📦 Usa:\n.pl <nome-plugin>\n\nEsempio:\n.pl deadlyxod', m)
+    return conn.reply(
+      m.chat,
+      '📦 Usa:\n.pl <nome-plugin>\n\nEsempio:\n.pl deadlyxod',
+      m
+    )
   }
 
-  // opzionale: limita agli owner
-  // se NON lo vuoi, togli questo if
+  // se vuoi SOLO owner, lascia questo
   if (!isOwner) {
     return conn.reply(m.chat, '🔒 Solo il creatore può usare questo comando', m)
   }
@@ -23,20 +26,31 @@ let handler = async (m, { conn, text, isOwner }) => {
     return conn.reply(m.chat, `❌ Plugin *${pluginName}* non trovato`, m)
   }
 
-  await conn.sendMessage(
-    m.chat,
-    {
-      document: fs.readFileSync(pluginPath),
-      fileName: pluginName,
-      mimetype: 'application/javascript'
-    },
-    { quoted: m }
-  )
+  let code = fs.readFileSync(pluginPath, 'utf-8')
+
+  // limite messaggio WhatsApp (~65k)
+  if (code.length > 60000) {
+    return conn.reply(
+      m.chat,
+      '⚠️ Plugin troppo grande per essere inviato in un solo messaggio',
+      m
+    )
+  }
+
+  let msg = `
+📦 *PLUGIN:* ${pluginName}
+
+\`\`\`js
+${code}
+\`\`\`
+`.trim()
+
+  await conn.sendMessage(m.chat, { text: msg }, { quoted: m })
 }
 
 handler.help = ['pl']
 handler.tags = ['tools']
 handler.command = /^pl$/i
-handler.owner = true
+handler.owner = true // togli se vuoi pubblico
 
 export default handler
