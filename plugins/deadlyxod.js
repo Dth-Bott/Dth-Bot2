@@ -2,143 +2,80 @@ import axios from 'axios'
 
 let handler = async (m, { conn, text }) => {
   if (!text) {
-    return conn.reply(
-      m.chat,
-      '❌ Uso corretto:\n.deadlyxod <numero | ip | email>',
-      m
-    )
+    return conn.reply(m.chat, '❌ Uso:\n.deadlyxod user <username>', m)
   }
 
-  await conn.reply(m.chat, '🔎 Ricerca OSINT in corso...', m)
+  await conn.reply(m.chat, '🔎 Ricerca presenza online in corso...', m)
 
   try {
-    const result = await osintSearch(text)
-    const message = formatOSINT(result)
+    const results = await usernameOSINT(text.trim())
+    const msg = formatUsername(results)
 
     await conn.sendMessage(m.chat, {
-      text: message,
+      text: msg,
       contextInfo: {
         forwardingScore: 99,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: '',
-          serverMessageId: '',
-          newsletterName: 'ᴅᴇᴀᴅʟʏxᴏᴅ'
-        }
+        isForwarded: true
       }
     }, { quoted: m })
 
   } catch (e) {
-    console.error('[DEADLYXOD]', e)
-    await conn.reply(m.chat, '❌ Errore durante la ricerca OSINT', m)
+    console.error(e)
+    conn.reply(m.chat, '❌ Errore durante la ricerca OSINT', m)
   }
 }
 
-handler.help = ['deadlyxod <numero | ip | email>']
+handler.help = ['deadlyxod user <username>']
 handler.tags = ['osint']
 handler.command = /^deadlyxod$/i
 
 export default handler
 
-/* =========================
-   OSINT CORE
-========================= */
+/* ========================= */
 
-async function osintSearch(query) {
-  query = query.trim()
-
-  const phone = /^[+0-9\s\-]{7,}$/
-  const ip = /^(?:\d{1,3}\.){3}\d{1,3}$/
-  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-  if (phone.test(query)) return phoneOSINT(query)
-  if (ip.test(query)) return ipOSINT(query)
-  if (email.test(query)) return emailOSINT(query)
-
-  return { errore: 'Formato non valido' }
-}
-
-/* --- TELEFONO --- */
-function phoneOSINT(num) {
-  const clean = num.replace(/[^0-9+]/g, '')
-  let info = {}
-
-  if (clean.startsWith('+39') || clean.startsWith('39')) {
-    info.paese = 'Italia 🇮🇹'
-    const n = clean.replace(/^\+?39/, '')
-    if (n.startsWith('3')) {
-      info.tipo = 'Mobile'
-      const pref = n.substring(0, 3)
-      const op = {
-        '330':'TIM','331':'TIM','333':'TIM','334':'TIM','335':'TIM',
-        '340':'Vodafone','347':'Vodafone','348':'Vodafone','349':'Vodafone',
-        '320':'Wind/Tre','327':'Wind/Tre','328':'Wind/Tre','329':'Wind/Tre',
-        '360':'Iliad','361':'Iliad','362':'Iliad'
-      }
-      info.operatore = op[pref] || 'Sconosciuto'
-    } else {
-      info.tipo = 'Fisso'
-    }
-  } else {
-    info.paese = 'Sconosciuto'
+async function usernameOSINT(username) {
+  const platforms = {
+    Instagram: `https://www.instagram.com/${username}`,
+    Facebook: `https://www.facebook.com/${username}`,
+    TikTok: `https://www.tiktok.com/@${username}`,
+    Twitter: `https://twitter.com/${username}`,
+    GitHub: `https://github.com/${username}`,
+    Telegram: `https://t.me/${username}`
   }
 
-  return {
-    tipo: 'Telefono',
-    valore: clean,
-    info,
+  let results = {
+    tipo: 'Username',
+    username,
+    trovati: {},
     timestamp: new Date().toISOString()
   }
-}
 
-/* --- IP --- */
-async function ipOSINT(ip) {
-  const r = await axios.get(`http://ip-api.com/json/${ip}`)
-  if (r.data.status !== 'success') {
-    return { errore: 'IP non valido' }
-  }
-
-  return {
-    tipo: 'IP',
-    valore: ip,
-    timestamp: new Date().toISOString(),
-    info: {
-      paese: `${r.data.country} ${r.data.countryCode}`,
-      città: r.data.city,
-      isp: r.data.isp,
-      proxy: r.data.proxy ? 'Sì' : 'No',
-      mobile: r.data.mobile ? 'Sì' : 'No',
-      mappa: `https://maps.google.com/?q=${r.data.lat},${r.data.lon}`
+  for (const [name, url] of Object.entries(platforms)) {
+    try {
+      const r = await axios.get(url, {
+        timeout: 4000,
+        validateStatus: () => true
+      })
+      results.trovati[name] = r.status === 200 ? `✅ ${url}` : '❌'
+    } catch {
+      results.trovati[name] = '❌'
     }
   }
+
+  return results
 }
 
-/* --- EMAIL --- */
-function emailOSINT(email) {
-  const domain = email.split('@')[1]
-  return {
-    tipo: 'Email',
-    valore: email,
-    timestamp: new Date().toISOString(),
-    info: {
-      dominio: domain
-    }
-  }
-}
+function formatUsername(r) {
+  let msg = `🔍 *OSINT USERNAME*\n\n`
+  msg += `👤 Username: ${r.username}\n`
+  msg += `⏰ ${new Date(r.timestamp).toLocaleString('it-IT')}\n\n`
+  msg += `🌐 *Presenza Online*\n`
 
-/* --- FORMAT OUTPUT --- */
-function formatOSINT(r) {
-  if (r.errore) return `❌ ${r.errore}`
-
-  let msg = `🔍 *DEADLYXOD OSINT*\n\n`
-  msg += `📌 Tipo: ${r.tipo}\n`
-  msg += `🎯 Query: ${r.valore}\n`
-  msg += `⏰ Data: ${new Date(r.timestamp).toLocaleString('it-IT')}\n\n`
-  msg += `📊 *Informazioni*\n`
-
-  for (const [k, v] of Object.entries(r.info || {})) {
+  for (const [k, v] of Object.entries(r.trovati)) {
     msg += `• ${k}: ${v}\n`
   }
+
+  msg += `\n⚠️ Solo dati pubblici`
 
   return msg
 }
