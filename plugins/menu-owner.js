@@ -11,6 +11,8 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 🚫 𝐆𝐄𝐒𝐓𝐈𝐎𝐍𝐄 𝐔𝐓𝐄𝐍𝐓𝐈
 ➤ ${usedPrefix}banuser 🔇 Blocca utente dal bot
 ➤ ${usedPrefix}unbanuser 🔊 Sblocca utente dal bot
+➤ ${usedPrefix}addmod 🔉 da moderatore 
+➤ ${usedPrefix}delmod 🚨 toglie moderatore 
 
 🤖 𝐆𝐄𝐒𝐓𝐈𝐎𝐍𝐄 𝐁𝐎𝐓
 ➤ ${usedPrefix}join + link ⚠️ Fai entrare il bot
@@ -21,6 +23,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}bigtag 🏹 Tagga tutti spam
 ➤ ${usedPrefix}bonoir 🌙 Segna AFK
 ➤ ${usedPrefix}wakeywakey ✅ Toglie AFK
+➤ ${usedPrefix}pl 🗂️ ti dà il plugin 
 
 ════════════════════
 📂 𝐀𝐋𝐓𝐑𝐈 𝐌𝐄𝐍𝐔
