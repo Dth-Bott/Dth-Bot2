@@ -2,51 +2,99 @@ import fetch from 'node-fetch'
 
 let handler = async (m, { conn, text }) => {
   if (!text) {
-    return conn.reply(m.chat, '📱 Inserisci un numero di telefono\n\nEsempio:\n.social +393331234567', m)
+    return conn.reply(
+      m.chat,
+      '🔎 Usa:\n.osint <numero> [username]\n\nEsempio:\n.osint +393331234567 marco.rossi',
+      m
+    )
   }
 
-  let numero = text.replace(/[^0-9+]/g, '')
+  let args = text.split(' ')
+  let numero = args[0].replace(/[^0-9+]/g, '')
+  let username = args[1] || null
 
   if (numero.length < 8) {
     return conn.reply(m.chat, '❌ Numero non valido', m)
   }
 
-  let query = numero.replace('+', '')
+  let cleanNumber = numero.replace('+', '')
 
-  // motore di ricerca pubblico (DuckDuckGo html)
-  async function search(q) {
-    let url = `https://duckduckgo.com/html/?q=${encodeURIComponent(q)}`
-    let res = await fetch(url)
-    let html = await res.text()
-    return html.includes('result__a')
+  async function found(query) {
+    try {
+      let url = `https://duckduckgo.com/html/?q=${encodeURIComponent(query)}`
+      let res = await fetch(url)
+      let html = await res.text()
+      return html.includes('result__a')
+    } catch {
+      return false
+    }
   }
 
+  // ricerche numero
   let results = {
-    instagram: await search(`"${query}" site:instagram.com`),
-    facebook: await search(`"${query}" site:facebook.com`),
-    telegram: await search(`"${query}" site:t.me`),
-    tiktok: await search(`"${query}" site:tiktok.com`)
+    instagram: await found(`"${cleanNumber}" site:instagram.com`),
+    facebook: await found(`"${cleanNumber}" site:facebook.com`),
+    telegram: await found(`"${cleanNumber}" site:t.me`),
+    tiktok: await found(`"${cleanNumber}" site:tiktok.com`),
+    twitter: await found(`"${cleanNumber}" site:twitter.com OR site:x.com`),
+    forum: await found(`"${cleanNumber}"`)
   }
 
-  let risposta = `
-🔍 *OSINT – Dati Pubblici*
+  // ricerche username
+  let userResults = {}
+  if (username) {
+    userResults = {
+      instagram: await found(`"${username}" site:instagram.com`),
+      facebook: await found(`"${username}" site:facebook.com`),
+      telegram: await found(`"${username}" site:t.me`),
+      tiktok: await found(`"${username}" site:tiktok.com`),
+      twitter: await found(`"${username}" site:twitter.com OR site:x.com`)
+    }
+  }
 
-Numero: *${numero}*
+  let esposizione =
+    Object.values(results).filter(Boolean).length +
+    Object.values(userResults).filter(Boolean).length
 
-📸 Instagram: ${results.instagram ? '✅ Presente' : '❌ Non trovato'}
-📘 Facebook: ${results.facebook ? '✅ Presente' : '❌ Non trovato'}
-✈️ Telegram: ${results.telegram ? '✅ Presente' : '❌ Non trovato'}
-🎵 TikTok: ${results.tiktok ? '✅ Presente' : '❌ Non trovato'}
+  let rischio =
+    esposizione >= 5 ? '🔴 ALTA' :
+    esposizione >= 2 ? '🟠 MEDIA' :
+    '🟢 BASSA'
 
-⚠️ Solo dati pubblici indicizzati
-⚠️ Nessun accesso privato
+  let msg = `
+🕵️‍♂️ *OSINT – Analisi Pubblica*
+
+📱 Numero: *${numero}*
+🌍 Paese stimato: *${numero.startsWith('+39') ? 'Italia 🇮🇹' : 'Sconosciuto'}*
+
+📡 *Presenza Numero*
+Instagram: ${results.instagram ? '✅' : '❌'}
+Facebook: ${results.facebook ? '✅' : '❌'}
+Telegram: ${results.telegram ? '✅' : '❌'}
+TikTok: ${results.tiktok ? '✅' : '❌'}
+Twitter/X: ${results.twitter ? '✅' : '❌'}
+Forum/Web: ${results.forum ? '✅' : '❌'}
+
+${username ? `
+👤 *Username: ${username}*
+Instagram: ${userResults.instagram ? '✅' : '❌'}
+Facebook: ${userResults.facebook ? '✅' : '❌'}
+Telegram: ${userResults.telegram ? '✅' : '❌'}
+TikTok: ${userResults.tiktok ? '✅' : '❌'}
+Twitter/X: ${userResults.twitter ? '✅' : '❌'}
+` : ''}
+
+⚠️ Rischio esposizione: *${rischio}*
+
+ℹ️ Solo dati pubblici indicizzati
+ℹ️ Nessun accesso privato
 `.trim()
 
-  await conn.sendMessage(m.chat, { text: risposta }, { quoted: m })
+  await conn.sendMessage(m.chat, { text: msg }, { quoted: m })
 }
 
-handler.help = ['social']
-handler.tags = ['tools', 'osint']
-handler.command = /^(social|osint|numero)$/i
+handler.help = ['osint']
+handler.tags = ['osint', 'tools']
+handler.command = /^osint$/i
 
 export default handler
