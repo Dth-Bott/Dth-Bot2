@@ -1,81 +1,52 @@
-import axios from 'axios'
+import fetch from 'node-fetch'
 
 let handler = async (m, { conn, text }) => {
   if (!text) {
-    return conn.reply(m.chat, '❌ Uso:\n.deadlyxod user <username>', m)
+    return conn.reply(m.chat, '📱 Inserisci un numero di telefono\n\nEsempio:\n.social +393331234567', m)
   }
 
-  await conn.reply(m.chat, '🔎 Ricerca presenza online in corso...', m)
+  let numero = text.replace(/[^0-9+]/g, '')
 
-  try {
-    const results = await usernameOSINT(text.trim())
-    const msg = formatUsername(results)
-
-    await conn.sendMessage(m.chat, {
-      text: msg,
-      contextInfo: {
-        forwardingScore: 99,
-        isForwarded: true
-      }
-    }, { quoted: m })
-
-  } catch (e) {
-    console.error(e)
-    conn.reply(m.chat, '❌ Errore durante la ricerca OSINT', m)
+  if (numero.length < 8) {
+    return conn.reply(m.chat, '❌ Numero non valido', m)
   }
-}
 
-handler.help = ['deadlyxod user <username>']
-handler.tags = ['osint']
-handler.command = /^deadlyxod$/i
+  let query = numero.replace('+', '')
 
-export default handler
-
-/* ========================= */
-
-async function usernameOSINT(username) {
-  const platforms = {
-    Instagram: `https://www.instagram.com/${username}`,
-    Facebook: `https://www.facebook.com/${username}`,
-    TikTok: `https://www.tiktok.com/@${username}`,
-    Twitter: `https://twitter.com/${username}`,
-    GitHub: `https://github.com/${username}`,
-    Telegram: `https://t.me/${username}`
+  // motore di ricerca pubblico (DuckDuckGo html)
+  async function search(q) {
+    let url = `https://duckduckgo.com/html/?q=${encodeURIComponent(q)}`
+    let res = await fetch(url)
+    let html = await res.text()
+    return html.includes('result__a')
   }
 
   let results = {
-    tipo: 'Username',
-    username,
-    trovati: {},
-    timestamp: new Date().toISOString()
+    instagram: await search(`"${query}" site:instagram.com`),
+    facebook: await search(`"${query}" site:facebook.com`),
+    telegram: await search(`"${query}" site:t.me`),
+    tiktok: await search(`"${query}" site:tiktok.com`)
   }
 
-  for (const [name, url] of Object.entries(platforms)) {
-    try {
-      const r = await axios.get(url, {
-        timeout: 4000,
-        validateStatus: () => true
-      })
-      results.trovati[name] = r.status === 200 ? `✅ ${url}` : '❌'
-    } catch {
-      results.trovati[name] = '❌'
-    }
-  }
+  let risposta = `
+🔍 *OSINT – Dati Pubblici*
 
-  return results
+Numero: *${numero}*
+
+📸 Instagram: ${results.instagram ? '✅ Presente' : '❌ Non trovato'}
+📘 Facebook: ${results.facebook ? '✅ Presente' : '❌ Non trovato'}
+✈️ Telegram: ${results.telegram ? '✅ Presente' : '❌ Non trovato'}
+🎵 TikTok: ${results.tiktok ? '✅ Presente' : '❌ Non trovato'}
+
+⚠️ Solo dati pubblici indicizzati
+⚠️ Nessun accesso privato
+`.trim()
+
+  await conn.sendMessage(m.chat, { text: risposta }, { quoted: m })
 }
 
-function formatUsername(r) {
-  let msg = `🔍 *OSINT USERNAME*\n\n`
-  msg += `👤 Username: ${r.username}\n`
-  msg += `⏰ ${new Date(r.timestamp).toLocaleString('it-IT')}\n\n`
-  msg += `🌐 *Presenza Online*\n`
+handler.help = ['social']
+handler.tags = ['tools', 'osint']
+handler.command = /^(social|osint|numero)$/i
 
-  for (const [k, v] of Object.entries(r.trovati)) {
-    msg += `• ${k}: ${v}\n`
-  }
-
-  msg += `\n⚠️ Solo dati pubblici`
-
-  return msg
-}
+export default handler
