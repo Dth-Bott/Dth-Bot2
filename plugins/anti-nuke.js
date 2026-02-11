@@ -1,7 +1,7 @@
-//Plugin fatto da Axtral_WiZaRd
+// Plugin fatto da Axtral_WiZaRd – Tema Sacrifice
 const handler = m => m;
 
-//lista autorizzati 
+// lista autorizzati 
 const registeredAdmins = [
   '212773631903@s.whatsapp.net',
   '@s.whatsapp.net',
@@ -36,14 +36,6 @@ handler.before = async function (m, { conn, participants, isBotAdmin }) {
     founderJid
   ].filter(Boolean);
 
-  console.log({
-    sender,
-    stub: m.messageStubType,
-    isBotAdmin,
-    participants: participants.map(p => ({ jid: p.jid, admin: p.admin })),
-    allowed
-  });
-
   if (allowed.includes(sender)) return;
 
   const usersToDemote = participants
@@ -61,21 +53,31 @@ handler.before = async function (m, { conn, participants, isBotAdmin }) {
 
   await conn.groupSettingUpdate(m.chat, 'announcement');
 
-  const action = m.messageStubType === 29 ? 'promozione' : 'retrocessione';
+  const action = m.messageStubType === 29 ? 'Promozione' : 'Retrocessione';
 
-  const text = `🚨 ANTI-NUKE ATTIVO
+  const groupName = m.pushName || 'GRUPPO SACRIFICE';
 
+  const text = `
+🩸 𝐒𝐀𝐂𝐑𝐈𝐅𝐈𝐂𝐄 • 𝐒𝐔𝐍𝐆 𝐃𝐄𝐋 𝐆𝐑𝐔𝐏𝐏𝐎 🩸
+
+════════════════════
+⚠️ 𝐀𝐙𝐈𝐎𝐍𝐄 𝐍𝐎𝐍 𝐀𝐔𝐓𝐎𝐑𝐈𝐙𝐙𝐀𝐓𝐀
+════════════════════
 👤 @${sender.split('@')[0]} ha effettuato una ${action} NON autorizzata.
 
-🔻 Admin rimossi:
-${usersToDemote.map(j => `@${j.split('@')[0]}`).join('\n')}
+🔻 𝐀𝐃𝐌𝐈𝐍 𝐑𝐈𝐌𝐎𝐒𝐒𝐈:
+${usersToDemote.map(j => `☠️ @${j.split('@')[0]}`).join('\n')}
 
-🔒 Gruppo chiuso per sicurezza.
+🔒 𝐆𝐑𝐔𝐏𝐏𝐎: *${groupName.toUpperCase()}* chiuso temporaneamente per sicurezza.
 
-👑 Owner avvisati:
-${BOT_OWNERS.map(x => `@${x.split('@')[0]}`).join('\n')}
+👑 𝐎𝐖𝐍𝐄𝐑 𝐀𝐕𝐕𝐈𝐒𝐀𝐓𝐈:
+${BOT_OWNERS.map(x => `💀 @${x.split('@')[0]}`).join('\n')}
 
-⚠️ Sistema di sicurezza attivo`;
+════════════════════
+🛡️ 𝐒𝐈𝐒𝐓𝐄𝐌𝐀 𝐃𝐈 𝐒𝐄𝐂𝐔𝐑𝐈𝐓𝐘 𝐀𝐓𝐓𝐈𝐕𝐎
+_il coglione ha veramente provato a nukkare *SACRIFICE*, ritenta sarai più fortunato la prossima volta_
+════════════════════
+`.trim();
 
   await conn.sendMessage(m.chat, {
     text,
