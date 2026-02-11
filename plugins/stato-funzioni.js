@@ -54,5 +54,6 @@ handler.help = ['funzioni']
 handler.tags = ['group']
 handler.command = ['stato', 'funzioniattive']
 handler.group = true
+handler.admin = true 
 
 export default handler
