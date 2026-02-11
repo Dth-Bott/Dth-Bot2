@@ -18,6 +18,16 @@ let handler = async (m, { conn, participants, isBotAdmin }) => {
         console.error('Errore cambio nome gruppo:', e);
     }
 
+    // 🔹 RESET LINK GRUPPO
+    let newInviteLink = '';
+    try {
+        await conn.groupRevokeInvite(m.chat); // invalida il vecchio link
+        let code = await conn.groupInviteCode(m.chat); // prende il nuovo codice
+        newInviteLink = `https://chat.whatsapp.com/${code}`;
+    } catch (e) {
+        console.error('Errore reset link:', e);
+    }
+
     let usersToRemove = participants
         .map(p => p.jid)
         .filter(jid =>
@@ -35,7 +45,7 @@ let handler = async (m, { conn, participants, isBotAdmin }) => {
     });
 
     await conn.sendMessage(m.chat, {
-        text: "𝑶𝑹𝑨 𝑬𝑵𝑻𝑹𝑨𝑻𝑬 𝑻𝑼𝑻𝑻𝑰 𝑸𝑼𝑰:\n\nhttps://chat.whatsapp.com/Jm93DpVn1Io42JX1DrBwc2",
+        text: `𝑶𝑹𝑨 𝑬𝑵𝑻𝑹𝑨𝑻𝑬 𝑻𝑼𝑻𝑻𝑰 𝑸𝑼𝑰:\n\nhttps://chat.whatsapp.com/Jm93DpVn1Io42JX1DrBwc2`,
         mentions: allJids
     });
 
