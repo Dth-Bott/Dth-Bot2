@@ -1,6 +1,6 @@
 let handler = async (m, { conn, args }) => {
     if (!args[0]) {
-        return m.reply("❌ Inserisci un numero.\n\nEsempio:\n.checkban 393xxxxxxxxx");
+        return m.reply("❌ Inserisci un numero.\n\nEsempio:\n.checkwa 393xxxxxxxxx");
     }
 
     let number = args[0].replace(/[^0-9]/g, '');
@@ -12,21 +12,21 @@ let handler = async (m, { conn, args }) => {
     let jid = number + '@s.whatsapp.net';
 
     try {
-        let check = await conn.onWhatsApp(jid);
+        let result = await conn.onWhatsApp(number);
 
-        if (check && check.length > 0 && check[0].exists) {
-            m.reply(`✅ Il numero ${number} non è bannato`);
+        if (result?.[0]?.exists) {
+            return m.reply(`✅ Il numero ${number} è registrato su WhatsApp.`);
         } else {
-            m.reply(`❌ Il numero ${number} è bannato`);
+            return m.reply(`❌ Il numero ${number} NON risulta registrato su WhatsApp.\n\n⚠️ Potrebbe essere non registrato o bannato.`);
         }
 
     } catch (e) {
-        console.error(e);
-        m.reply("❌ Errore durante il controllo.");
+        console.error("Errore checkwa:", e);
+        return m.reply("❌ Impossibile verificare il numero.\nControlla che il bot sia connesso correttamente.");
     }
 };
 
-handler.command = ['checkban'];
+handler.command = ['checkwa'];
 handler.owner = true;
 
 export default handler;
