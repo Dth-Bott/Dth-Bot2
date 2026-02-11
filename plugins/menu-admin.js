@@ -28,6 +28,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 🔒 𝐈𝐌𝐏𝐎𝐒𝐓𝐀𝐙𝐈𝐎𝐍𝐈 𝐆𝐑𝐔𝐏𝐏𝐎
 ➤ ${usedPrefix}aperto                🌙 Apri gruppo
 ➤ ${usedPrefix}chiuso                🔐 Chiudi gruppo
+➤ ${usedPrefix}modlist               📳 lista moderatori 
 ➤ ${usedPrefix}inattivi              ⏳ Gestisci inattivi
 
 👋 𝐔𝐓𝐄𝐍𝐓𝐈
