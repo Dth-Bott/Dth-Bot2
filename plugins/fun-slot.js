@@ -2,27 +2,10 @@ let cooldowns = {}
 
 const fruits = ['🍒', '🍋', '🍉', '🍇', '🍎', '🍓']
 
-let handler = async (m, { conn, args, usedPrefix, command }) => {
+let handler = async (m, { conn }) => {
     let user = global.db.data.users[m.sender]
-    let bet = args[0] ? parseInt(args[0]) : 20
 
-    if (isNaN(bet) || bet <= 0) {
-        return conn.reply(
-            m.chat,
-            '❌ 𝗣𝗨𝗡𝗧𝗔𝗧𝗔 𝗡𝗢𝗡 𝗩𝗔𝗟𝗜𝗗𝗔\n\n📌 𝗘𝘀𝗲𝗺𝗽𝗶𝗼:\n' +
-            `➤ ${usedPrefix + command} 100`,
-            m
-        )
-    }
-
-    if ((user.limit || 0) < bet) {
-        return conn.reply(
-            m.chat,
-            `🚫 𝗘𝗨𝗥𝗢 𝗜𝗡𝗦𝗨𝗙𝗙𝗜𝗖𝗜𝗘𝗡𝗧𝗜\n\n💰 𝗧𝗶 𝘀𝗲𝗿𝘃𝗼𝗻𝗼 ${bet} €`,
-            m
-        )
-    }
-
+    // ⏳ Cooldown 5 minuti
     if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < 300000) {
         let timeLeft = cooldowns[m.sender] + 300000 - Date.now()
         let min = Math.floor(timeLeft / 60000)
@@ -34,14 +17,14 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
         )
     }
 
-    // 🎰 Estrazione frutta
+    // 🎰 Estrazione
     let r1 = fruits[Math.floor(Math.random() * fruits.length)]
     let r2 = fruits[Math.floor(Math.random() * fruits.length)]
     let r3 = fruits[Math.floor(Math.random() * fruits.length)]
 
-    // 🎯 Controllo vincita
     let win = (r1 === r2 || r2 === r3 || r1 === r3)
 
+    user.limit = Number(user.limit) || 0
     user.exp = Number(user.exp) || 0
     user.level = Number(user.level) || 1
 
@@ -54,27 +37,26 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     resultMsg += `┃ ${r1} │ ${r2} │ ${r3} ┃\n\n`
 
     if (win) {
-        user.limit += 800
+        user.limit += 500
         user.exp += 100
 
         resultMsg += '🎉 𝗩𝗜𝗧𝗧𝗢𝗥𝗜𝗔!\n'
-        resultMsg += '➕ 𝟴𝟬𝟬 €\n'
-        resultMsg += '➕ 𝟭𝟬𝟬 𝗫𝗣\n'
+        resultMsg += '➕ 500 €\n'
+        resultMsg += '➕ 100 XP\n'
     } else {
-        user.limit -= bet
-        user.exp = Math.max(0, user.exp - bet)
+        user.limit = Math.max(0, user.limit - 100)
+        user.exp = Math.max(0, user.exp - 50)
 
         resultMsg += '🤡 𝗦𝗖𝗢𝗡𝗙𝗜𝗧𝗧𝗔!\n'
-        resultMsg += `➖ ${bet} €\n`
-        resultMsg += `➖ ${bet} 𝗫𝗣\n`
+        resultMsg += '➖ 100 €\n'
+        resultMsg += '➖ 50 XP\n'
     }
 
     resultMsg += '\n━━━━━━━━━━━━━━━\n'
     resultMsg += '💼 𝗦𝗔𝗟𝗗𝗢 𝗔𝗧𝗧𝗨𝗔𝗟𝗘\n\n'
     resultMsg += `💰 𝗘𝘂𝗿𝗼: ${user.limit}\n`
     resultMsg += `⭐ 𝗫𝗣: ${user.exp}\n`
-    resultMsg += `📊 𝗣𝗿𝗼𝗴𝗿𝗲𝘀𝘀𝗼: ${currentLevelXP}/${levelXP} XP\n\n`
-    resultMsg += ``
+    resultMsg += `📊 𝗣𝗿𝗼𝗴𝗿𝗲𝘀𝘀𝗼: ${currentLevelXP}/${levelXP} XP\n`
 
     cooldowns[m.sender] = Date.now()
 
@@ -82,7 +64,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     await conn.reply(m.chat, resultMsg, m)
 }
 
-handler.help = ['slot <puntata>']
+handler.help = ['slot']
 handler.tags = ['game']
 handler.command = ['slot']
 
