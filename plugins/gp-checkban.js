@@ -26,7 +26,7 @@ let handler = async (m, { conn, args }) => {
     }
 };
 
-handler.command = ['checkbab'];
+handler.command = ['checkban'];
 handler.owner = true;
 
 export default handler;
