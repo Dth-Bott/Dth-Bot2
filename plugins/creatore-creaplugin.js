@@ -1,66 +1,45 @@
-import fetch from 'node-fetch'
-
 let handler = async (m, { conn, text }) => {
     if (!text) {
-        return m.reply('❌ Inserisci la descrizione del plugin.\n\n📌 Esempio:\n.creaplugin comando che saluta quando scrivi ciao')
-    }
-
-    if (!global.openaiKey) {
-        return m.reply('❌ OpenAI API key non configurata.')
+        return m.reply(
+            '❌ Inserisci la descrizione del plugin.\n\n' +
+            '📌 Esempio:\n.creaplugin comando saluta che dice ciao mondo'
+        )
     }
 
     try {
 
-        m.reply('🧠 Creazione plugin in corso...')
+        // 🧠 Estrae nome comando (prima parola)
+        let words = text.trim().split(' ')
+        let commandName = words[0].toLowerCase().replace(/[^a-z0-9]/gi, '')
 
-        const prompt = `
-Crea un plugin WhatsApp in JavaScript compatibile con questa struttura:
-
-let handler = async (m, { conn }) => {
-   // codice
-}
-
-handler.help = ['nomecomando']
-handler.tags = ['categoria']
-handler.command = ['nomecomando']
-
-export default handler
-
-Descrizione plugin: ${text}
-
-Regole:
-- Nessuna spiegazione
-- Solo codice JS
-- Compatibile con sistema handler
-- Nessun testo fuori dal codice
-`
-
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${global.openaiKey}`
-            },
-            body: JSON.stringify({
-                model: "gpt-4o-mini",
-                messages: [
-                    { role: "user", content: prompt }
-                ],
-                temperature: 0.7
-            })
-        })
-
-        const data = await response.json()
-
-        if (!data.choices) {
-            return m.reply('❌ Errore nella generazione.')
+        if (!commandName) {
+            return m.reply('❌ Nome comando non valido.')
         }
 
-        let codice = data.choices[0].message.content
+        // ✨ Crea messaggio risposta basato sulla descrizione
+        let responseText = text.replace(words[0], '').trim() || 'Plugin eseguito con successo!'
 
+        // 📦 Generazione codice plugin
+        let pluginCode = `
+let handler = async (m, { conn }) => {
+    try {
         await conn.sendMessage(m.chat, {
-            text: codice
+            text: "${responseText}"
         }, { quoted: m })
+    } catch (e) {
+        console.error(e)
+        m.reply("❌ Errore nel comando ${commandName}")
+    }
+}
+
+handler.help = ['${commandName}']
+handler.tags = ['custom']
+handler.command = ['${commandName}']
+
+export default handler
+`.trim()
+
+        await conn.sendMessage(m.chat, { text: pluginCode }, { quoted: m })
 
     } catch (e) {
         console.error(e)
