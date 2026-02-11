@@ -25,6 +25,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}bonoir 🌙 Segna AFK
 ➤ ${usedPrefix}wakeywakey ✅ Toglie AFK
 ➤ ${usedPrefix}pl 🗂️ ti dà il plugin 
+➤ ${usedPrefix}eliminapl 🗑️ elimina il plugin 
 
 ════════════════════
 📂 𝐀𝐋𝐓𝐑𝐈 𝐌𝐄𝐍𝐔
