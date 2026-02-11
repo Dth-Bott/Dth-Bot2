@@ -1,31 +1,32 @@
 let handler = async (m, { conn, text }) => {
-    if (!text) {
-        return m.reply(
-            '❌ Inserisci la descrizione del plugin.\n\n' +
-            '📌 Esempio:\n.creaplugin comando saluta che dice ciao mondo'
-        )
-    }
+    if (!text) return m.reply(
+        '❌ Inserisci la descrizione del plugin.\n' +
+        '📌 Esempio:\n.creaplugin plugin che saluta quando qualcuno scrive buongiorno'
+    )
 
     try {
+        // 1️⃣ Estrai parola chiave trigger
+        // cerca pattern tipo "quando qualcuno scrive X"
+        let triggerMatch = text.match(/quando qualcuno scrive (.+)/i)
+        let triggerText = triggerMatch ? triggerMatch[1].trim() : null
 
-        // 🧠 Estrae nome comando (prima parola)
-        let words = text.trim().split(' ')
-        let commandName = words[0].toLowerCase().replace(/[^a-z0-9]/gi, '')
+        // 2️⃣ Estrai nome comando
+        let words = text.split(' ')
+        let commandName = words[0].toLowerCase().replace(/[^a-z0-9]/gi, '') || 'customplugin'
 
-        if (!commandName) {
-            return m.reply('❌ Nome comando non valido.')
-        }
+        // 3️⃣ Genera messaggio di default
+        let responseText = triggerText ? `Risposta automatica a "${triggerText}"` : 'Plugin creato con successo!'
 
-        // ✨ Crea messaggio risposta basato sulla descrizione
-        let responseText = text.replace(words[0], '').trim() || 'Plugin eseguito con successo!'
-
-        // 📦 Generazione codice plugin
+        // 4️⃣ Genera codice plugin
         let pluginCode = `
 let handler = async (m, { conn }) => {
     try {
-        await conn.sendMessage(m.chat, {
-            text: "${responseText}"
-        }, { quoted: m })
+        let msgText = (m.message?.conversation || m.message?.extendedTextMessage?.text || "").toLowerCase()
+        ${triggerText ? `
+        if(msgText.includes("${triggerText.toLowerCase()}")) {
+            await conn.sendMessage(m.chat, { text: "${responseText}" }, { quoted: m })
+        }` : `
+        await conn.sendMessage(m.chat, { text: "${responseText}" }, { quoted: m })`}
     } catch (e) {
         console.error(e)
         m.reply("❌ Errore nel comando ${commandName}")
@@ -43,7 +44,7 @@ export default handler
 
     } catch (e) {
         console.error(e)
-        m.reply('❌ Errore durante la creazione del plugin.')
+        m.reply('❌ Errore nella creazione del plugin.')
     }
 }
 
