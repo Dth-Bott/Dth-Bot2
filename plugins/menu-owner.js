@@ -13,6 +13,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}unbanuser 🔊 Sblocca utente dal bot
 ➤ ${usedPrefix}addmod 🔉 da moderatore 
 ➤ ${usedPrefix}delmod 🚨 toglie moderatore 
+➤ ${usedPrefix}resetmod 🗑️ resetta tutti i moderatori 
 
 🤖 𝐆𝐄𝐒𝐓𝐈𝐎𝐍𝐄 𝐁𝐎𝐓
 ➤ ${usedPrefix}join + link ⚠️ Fai entrare il bot
