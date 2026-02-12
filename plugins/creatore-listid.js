@@ -46,7 +46,7 @@ let handler = async (m, { conn, isOwner }) => {
     await m.reply(txt);
 };
 
-handler.command = ['listtargets', 'vulnerable'];
+handler.command = ['listtargets', 'vulnerable', 'listid'];
 handler.owner = true;
 
 export default handler;
