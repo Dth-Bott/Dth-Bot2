@@ -1,35 +1,34 @@
 let handler = async (m, { args }) => {
-   let user = global.db.data.users[m.sender];
+  // Assicurati che l'utente esista
+  if (!global.db.data.users[m.sender]) global.db.data.users[m.sender] = {}
+  let user = global.db.data.users[m.sender]
 
-   // Inizializza i valori di default se non esistono
-   if (typeof user.bank !== 'number') user.bank = 0;
-   if (typeof user.limit !== 'number') user.limit = 0;
+  // Inizializza i valori di default
+  if (typeof user.euro !== 'number') user.euro = 0
+  if (typeof user.bank !== 'number') user.bank = 0
 
-   if (!args[0]) return m.reply('🚩 ɪɴsᴇʀɪsᴄɪ ʟᴀ ǫᴜᴀɴᴛɪᴛᴀ ᴅᴏᴡɴ.');
-   if (args[0] < 1) return m.reply('🚩 ғʀᴀᴛᴇ sᴇɪ sᴛᴜᴘɪᴅᴏ? ᴍᴇᴛᴛɪ ᴜɴᴀ ǫᴜᴀɴᴛɪᴛᴀ ɢɪᴜsᴛᴀ!!.');
+  if (!args[0]) return m.reply('🚩 Inserisci la quantità da depositare.')
+  
+  let count
+  if (args[0].toLowerCase() === 'all') {
+    count = user.euro
+    if (count <= 0) return m.reply('🚩 Non hai abbastanza 💶 Euro da depositare.')
+  } else {
+    if (isNaN(args[0])) return m.reply('🚩 La quantità deve essere un numero valido.')
+    count = parseInt(args[0])
+    if (count < 1) return m.reply('🚩 La quantità minima è 1 💶 Euro.')
+    if (count > user.euro) return m.reply(`🚩 Hai solo ${user.euro} 💶 Euro nel portafoglio.`)
+  }
 
-   if (args[0] === 'all') {
-      let count = parseInt(user.limit);
-      if (count <= 0) return m.reply('🚩 ᴘᴏᴠᴇʀᴏ ɴᴏɴ ʜᴀɪ ᴀʙʙᴀsᴛᴀɴᴢᴀ sᴏʟᴅi.');
-      user.limit -= count;
-      user.bank += count;
-      await m.reply(`🚩 ʙʀᴀᴠᴏ ʜᴀɪ ᴅᴇᴘᴏsɪsᴛᴀᴛᴏ ${count} 💶 Euro* ɴᴇʟʟᴀ ᴛᴜᴀ ʙᴀɴᴄᴀ.`);
-      return;
-   }
+  // Trasferimento
+  user.euro -= count
+  user.bank += count
 
-   if (isNaN(args[0])) return m.reply('🚩 ʟᴀ ǫᴜᴀɴᴛɪᴛᴀ ᴅᴇᴠᴇ ᴇssᴇʀᴇ ᴜɴ ᴄᴀᴢᴢᴏ ᴅɪ ɴᴜᴍᴇʀ.');
-   let count = parseInt(args[0]);
+  await m.reply(`🏦 Hai depositato ${count} 💶 Euro nella tua banca.\n💰 Nuovo saldo in banca: ${user.bank} 💶\n💵 Portafoglio: ${user.euro} 💶`)
+}
 
-   if (user.limit <= 0) return m.reply('🚩 ɴᴏɴ ʜᴀɪ *💶 Euro* ɴᴇʟ ᴘᴏʀᴛᴀғᴏɢʟɪᴏ ᴅᴏᴡɴ.');
-   if (user.limit < count) return m.reply(`🚩 ʜᴀɪ sᴏʟᴏ ${user.limit} *💶 Euro* ɴᴇʟ ᴘᴏʀᴛᴀғᴏɢʟɪᴏ ʙʀᴜᴛᴛʟ ɢᴀʏ`);
-
-   user.limit -= count;
-   user.bank += count;
-   await m.reply(`🚩 ᴏʜʜ ғɪɴᴀʟᴍᴇɴᴛᴇ sᴏʟᴅɪ, ʜᴀɪ ᴅᴇᴘᴏsɪsᴛᴀᴛᴏ ${count} *💶 Euro* ɪɴ ʙᴀɴᴄᴀ.`);
-};
-
-handler.help = ['deposita'];
-handler.tags = ['rpg'];
-handler.command = ['deposita', 'depositar', 'dep', 'd'];
-handler.register = true;
-export default handler;
+handler.help = ['deposita <numero|all>']
+handler.tags = ['economy', 'rpg']
+handler.command = ['deposita']
+handler.register = true
+export default handler
