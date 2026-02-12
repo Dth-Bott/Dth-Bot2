@@ -71,6 +71,5 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 handler.help = ['bonifico @user <euro>', 'trasferisci', 'donauc']
 handler.tags = ['rpg']
 handler.command = ['bonifico', 'dona']
-handler.register = true
 
 export default handler
