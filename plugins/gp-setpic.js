@@ -5,7 +5,7 @@ const handler = async (m, { conn, isAdmin }) => {
         return m.reply('⛔ *Solo gli admin del gruppo possono usare questo comando.*')
     }
 
-    // Recupera il messaggio citato in maniera flessibile
+    // Recupera il messaggio citato
     const quotedMsg = m.quoted?.message || m.message?.extendedTextMessage?.contextInfo?.quotedMessage
 
     if (!quotedMsg) {
@@ -34,9 +34,17 @@ const handler = async (m, { conn, isAdmin }) => {
         // Messaggio di conferma
         await m.reply('✅ Foto del gruppo aggiornata con successo!')
 
+        // Elimina il messaggio comando e quello citato per mantenere il gruppo pulito
+        try {
+            if (m.quoted) await conn.sendMessage(m.chat, { delete: m.quoted.key })
+            await conn.sendMessage(m.chat, { delete: m.key })
+        } catch (e) {
+            console.error('Errore cancellazione messaggi:', e)
+        }
+
     } catch (e) {
         console.error('Errore nel cambiare la foto del gruppo:', e)
-        await m.reply('❌ Impossibile cambiare la foto del gruppo. Assicurati che il bot sia admin.')
+        await m.reply('❌ Impossibile cambiare la foto del gruppo. Assicurati che il bot sia admin e che l\'immagine sia valida.')
     }
 }
 
