@@ -34,7 +34,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
   // Se ha menzionato qualcuno, rimuoviamo la menzione dal testo
   let txt = text
-  if (m.mentionedJid[0]) {
+  if (m.mentionedJid && m.mentionedJid[0]) {
     txt = text.replace('@' + who.split('@')[0], '').trim()
   }
 
@@ -68,18 +68,13 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
   await m.reply(
     `🏦 BONIFICO ESEGUITO\n\n` +
+    `👤 Destinatario: @${who.split('@')[0]}\n` +
     `💸 Inviati: -${euro} €\n` +
     `🧾 Tassa (2%): -${tassaImporto} €\n` +
-    `📉 Totale scalato: ${costoTotale} €`
+    `📉 Totale scalato: ${costoTotale} €`,
+    null,
+    { mentions: [who] }
   )
-
-  await conn.sendMessage(who, {
-    text:
-      `💰 BONIFICO RICEVUTO!\n\n` +
-      `📈 +${euro} €\n` +
-      `👤 Da: @${m.sender.split('@')[0]}`,
-    mentions: [m.sender]
-  })
 
   global.db.write()
 }
