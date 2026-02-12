@@ -30,5 +30,5 @@ let handler = async (m, { args }) => {
 handler.help = ['deposita <numero|all>']
 handler.tags = ['economy', 'rpg']
 handler.command = ['deposita']
-handler.register = true
+
 export default handler
