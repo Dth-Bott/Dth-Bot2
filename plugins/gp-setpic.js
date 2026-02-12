@@ -1,6 +1,6 @@
 const handler = async (m, { conn, isAdmin }) => {
 
-    // 🔐 CONTROLLO PERMESSI (SOLO ADMIN)
+    // 🔐 SOLO ADMIN
     if (!isAdmin) {
         return m.reply('⛔ *Solo gli admin del gruppo possono usare questo comando.*')
     }
@@ -12,38 +12,40 @@ const handler = async (m, { conn, isAdmin }) => {
         return m.reply('⚠️ Rispondi a un\'immagine con il comando per cambiare la foto del gruppo.')
     }
 
-    // Controlla se il messaggio è un'immagine o un documento immagine
+    // Controlla se è immagine o documento immagine
     const isImage = quotedMsg.imageMessage || (quotedMsg.documentMessage && quotedMsg.documentMessage.mimetype?.startsWith('image/'))
-
     if (!isImage) {
         return m.reply('⚠️ Rispondi a un\'immagine valida per cambiare la foto del gruppo.')
     }
 
-    // Controllo che sia un gruppo
+    // Controllo gruppo
     if (!m.chat.endsWith('@g.us')) {
         return m.reply('⚠️ Questo comando funziona solo nei gruppi.')
     }
 
     try {
-        // Scarica l'immagine citata
+        // Scarica l'immagine
         const buffer = await conn.downloadMediaMessage({ message: quotedMsg })
+
+        // Controlla che il buffer sia valido
+        if (!buffer || buffer.length === 0) {
+            return m.reply('❌ Impossibile scaricare l\'immagine. Assicurati che sia un file valido.')
+        }
 
         // Cambia la foto del gruppo
         await conn.groupUpdateProfilePicture(m.chat, buffer)
-
-        // Messaggio di conferma
         await m.reply('✅ Foto del gruppo aggiornata con successo!')
 
-        // Elimina il messaggio comando e quello citato per mantenere il gruppo pulito
+        // Elimina messaggio comando e citato
         try {
             if (m.quoted) await conn.sendMessage(m.chat, { delete: m.quoted.key })
             await conn.sendMessage(m.chat, { delete: m.key })
         } catch (e) {
-            console.error('Errore cancellazione messaggi:', e)
+            console.error('Errore eliminazione messaggi:', e)
         }
 
     } catch (e) {
-        console.error('Errore nel cambiare la foto del gruppo:', e)
+        console.error('Errore cambiando la foto del gruppo:', e)
         await m.reply('❌ Impossibile cambiare la foto del gruppo. Assicurati che il bot sia admin e che l\'immagine sia valida.')
     }
 }
