@@ -1,38 +1,25 @@
-let handler = async (m, { conn, usedPrefix }) => {
-    let who = m.mentionedJid[0] || m.quoted?.sender || m.sender;
+let handler = async (m, { conn }) => {
+  // Determina l'utente da mostrare
+  let who = m.mentionedJid?.[0] || m.quoted?.sender || m.sender;
 
-    if (!(who in global.db.data.users)) {
-        return m.reply(`*L'utente non è presente nel database.*`);
-    }
+  // Inizializza l'utente nel database se non esiste
+  if (!global.db.data.users[who]) global.db.data.users[who] = {};
+  let user = global.db.data.users[who];
 
-    let user = global.db.data.users[who];
+  // Inizializza valori sicuri
+  if (typeof user.bank !== 'number') user.bank = 0;
 
-    // Inizializzazione sicura
-    user.bank = Number(user.bank) || 0;
+  // Messaggio
+  let message = who === m.sender
+    ? `💰 Hai *${user.bank} 💶 Euro* in banca.`
+    : `💰 L'utente @${who.split('@')[0]} ha *${user.bank} 💶 Euro* in banca.`;
 
-    let message = `${who === m.sender 
-        ? `💰 𝐡𝐚𝐢 *${user.bank} 💶 Euro* 𝐢𝐧 𝐛𝐚𝐧𝐜𝐚🏛️.` 
-        : `💰 𝐢𝐥 𝐛𝐫𝐨 @${who.split('@')[0]} 𝐚
-   𝐡𝐚 *${user.bank} 💶 Euro* 𝐢𝐧 𝐛𝐚𝐧𝐜𝐚🏛️.`}`;
-
-    // Invia l'immagine cubank.jpg
-    await conn.sendMessage(m.chat, {
-        image: { url: 'icone/cubank.jpg' },
-        caption: message,
-        contextInfo: {
-            forwardingScore: 99,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '',
-                serverMessageId: '',
-                newsletterName: 'ChatUnity'
-            }
-        }
-    }, { quoted: m });
+  // Invia solo testo
+  await m.reply(message, null, { mentions: [who] });
 };
 
-handler.help = ['bank'];
-handler.tags = ['rpg'];
-handler.command = ['bank', 'banca'];
+handler.help = ['bank', 'banca'];
+handler.tags = ['rpg', 'economy'];
+handler.command = ['banca'];
 handler.register = true;
 export default handler;
