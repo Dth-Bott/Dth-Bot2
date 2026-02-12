@@ -32,7 +32,6 @@ let handler = async (m, { conn }) => {
 handler.command = /^wallet$/i
 handler.help = ['wallet']
 handler.tags = ['euro']
-handler.register = true
 
 export default handler
 
