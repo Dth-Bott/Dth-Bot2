@@ -21,5 +21,5 @@ let handler = async (m, { conn }) => {
 handler.help = ['bank', 'banca'];
 handler.tags = ['rpg', 'economy'];
 handler.command = ['banca'];
-handler.register = true;
+
 export default handler;
