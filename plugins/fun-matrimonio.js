@@ -2,7 +2,7 @@ const proposals = {}
 const adoptions = {}
 const lovers = {}
 
-let handler = async (m, { conn, command, usedPrefix, participants }) => {
+let handler = async (m, { conn, command, usedPrefix }) => {
     const users = global.db.data.users
     if (!users[m.sender]) users[m.sender] = {}
 
@@ -19,6 +19,8 @@ let handler = async (m, { conn, command, usedPrefix, participants }) => {
             return togliFiglio(m, users)
         case 'amante':
             return amante(m, conn, users, usedPrefix)
+        case 'togliamante':
+            return togliAmante(m, users)
     }
 }
 
@@ -102,6 +104,25 @@ ${tagUser(sender)} vuole che ${tagUser(target)} diventi il suo amante 😏
             conn.sendMessage(m.chat, { text: '⏳ Proposta amante scaduta.' })
         }
     }, 60000)
+}
+
+/* ================= ❌ TOGLI AMANTE ================= */
+function togliAmante(m, users) {
+    const user = users[m.sender]
+
+    if (!user.amante)
+        throw '❌ Non hai nessun amante'
+
+    const ex = users[user.amante]
+    const exJid = user.amante
+
+    user.amante = null
+
+    if (ex) ex.amante = null
+
+    m.reply(`💔 Tu e ${tagUser(exJid)} non siete più amanti`, null, {
+        mentions: [exJid]
+    })
 }
 
 /* ================= 👨‍👩‍👧 ADOZIONE ================= */
@@ -192,22 +213,6 @@ function divorzia(m, users) {
     m.reply('💔 Matrimonio terminato. Ora siete divorziati.')
 }
 
-/* ================= ❌ TOGLI FIGLIO ================= */
-function togliFiglio(m, users) {
-    const user = users[m.sender]
-    const target = m.mentionedJid?.[0] || m.quoted?.sender
-    if (!target) throw 'Usa: .toglifiglio @utente'
-
-    if (!user.figli?.includes(target))
-        throw '❌ Questa persona non è tuo figlio'
-
-    user.figli = user.figli.filter(f => f !== target)
-    users[target].genitori =
-        users[target].genitori?.filter(g => g !== m.sender)
-
-    m.reply(`✅ ${tagUser(target)} non è più tuo figlio`, null, { mentions: [target] })
-}
-
 /* ================= 🔒 CONFERME ================= */
 handler.before = async (m, { conn }) => {
     if (!m.text) return
@@ -291,12 +296,11 @@ handler.before = async (m, { conn }) => {
     }
 }
 
-/* ================= 🏷️ TAG ================= */
 function tagUser(jid) {
     return '@' + jid.split('@')[0]
 }
 
-handler.command = ['sposa', 'divorzia', 'adotta', 'famiglia', 'toglifiglio', 'amante']
+handler.command = ['sposa', 'divorzia', 'adotta', 'famiglia', 'toglifiglio', 'amante', 'togliamante']
 handler.group = true
 
 export default handler
