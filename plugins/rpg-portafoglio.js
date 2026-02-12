@@ -1,19 +1,16 @@
 let handler = async (m, { conn }) => {
+
     let who = m.quoted
         ? m.quoted.sender
         : m.mentionedJid && m.mentionedJid[0]
         ? m.mentionedJid[0]
-        : m.fromMe
-        ? conn.user.jid
         : m.sender
 
     if (!(who in global.db.data.users))
-        throw '🚩 Utente non trovato nel database'
+        return m.reply('🚩 Utente non trovato nel database')
 
     let user = global.db.data.users[who]
-    let name = await conn.getName(who)
 
-    // Sistema soldi VareBot
     if (!user.euro) user.euro = 0
     if (!user.bank) user.bank = 0
 
@@ -22,29 +19,27 @@ let handler = async (m, { conn }) => {
     let message = `
 ╔═ 💼 𝑾𝑨𝑳𝑳𝑬𝑻 💼 ═╗
 ║
-║ 👤 𝑼𝒕𝒆𝒏𝒕𝒆: ${name}
+║ 👤 Utente: @${who.split('@')[0]}
 ║
-║ 💶 𝑪𝒐𝒏𝒕𝒂𝒏𝒕𝒊
+║ 💶 Contanti
 ║    ➜ ${formatNumber(user.euro)} €
 ║
-║ 🏦 𝑩𝒂𝒏𝒄𝒂
+║ 🏦 Banca
 ║    ➜ ${formatNumber(user.bank)} €
 ║
 ║ ─────────────────
-║ 🧾 𝑻𝒐𝒕𝒂𝒍𝒆
+║ 🧾 Totale
 ║    ➜ ${formatNumber(total)} €
 ║
 ╚════════════════╝
 `.trim()
 
-    await conn.sendMessage(m.chat, { text: message }, { quoted: m })
-
-    m.react('💶')
+    await m.reply(message, null, { mentions: [who] })
 }
 
 handler.help = ['wallet']
 handler.tags = ['euro']
-handler.command = ['soldi', 'wallet', 'portafoglio', 'saldo', 'euro']
+handler.command = ['wallet', 'soldi', 'saldo', 'portafoglio']
 handler.register = true
 
 export default handler
