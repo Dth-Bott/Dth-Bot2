@@ -1,17 +1,28 @@
-let handler = async (m, { conn, text, mentionedJid }) => {
+let handler = async (m, { text, mentionedJid }) => {
 
     // Estrai l'importo dal primo argomento
     if (!text) return m.reply('❌ Inserisci un numero di euro da aggiungere.\nUso: .addeuro 100 @utente')
-    let amount = parseInt(text.split(' ')[0])
+
+    let args = text.split(' ')
+    let amount = parseInt(args[0])
     if (isNaN(amount) || amount <= 0) return m.reply('❌ Devi inserire un numero valido maggiore di 0.')
 
-    // Determina a chi aggiungere i soldi
     let who
+
+    // Caso 1: tag WhatsApp
     if (mentionedJid && mentionedJid.length > 0) {
-        // Caso 1: tag diretto
         who = mentionedJid[0]
-    } else {
-        // Caso 2: nessun tag, aggiunge soldi a chi scrive
+    } 
+    // Caso 2: tag scritto manualmente, tipo @nome
+    else if (args[1] && args[1].startsWith('@')) {
+        let username = args[1].replace('@','')
+        // cerca tra gli utenti registrati
+        let found = Object.keys(global.db.data.users).find(u => u.includes(username))
+        if (found) who = found
+        else return m.reply('❌ Utente non trovato.')
+    } 
+    // Caso 3: nessun tag → chi scrive il messaggio
+    else {
         who = m.sender
     }
 
@@ -43,7 +54,7 @@ let handler = async (m, { conn, text, mentionedJid }) => {
 handler.command = /^addeuro$/i
 handler.help = ['addeuro']
 handler.tags = ['euro']
-handler.owner = true
+handler.owner = true 
 
 export default handler
 
