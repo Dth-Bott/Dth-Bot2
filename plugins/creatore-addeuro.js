@@ -1,13 +1,19 @@
 let handler = async (m, { conn, text, mentionedJid }) => {
 
-    // Se è taggata una persona, usa quella; altrimenti usa chi ha inviato il messaggio
-    let who = mentionedJid && mentionedJid[0] ? mentionedJid[0] : m.sender
-
-    // Controllo che ci sia un numero
+    // Estrai l'importo dal primo argomento
     if (!text) return m.reply('❌ Inserisci un numero di euro da aggiungere.\nUso: .addeuro 100 @utente')
-
     let amount = parseInt(text.split(' ')[0])
     if (isNaN(amount) || amount <= 0) return m.reply('❌ Devi inserire un numero valido maggiore di 0.')
+
+    // Determina a chi aggiungere i soldi
+    let who
+    if (mentionedJid && mentionedJid.length > 0) {
+        // Caso 1: tag diretto
+        who = mentionedJid[0]
+    } else {
+        // Caso 2: nessun tag, aggiunge soldi a chi scrive
+        who = m.sender
+    }
 
     // Inizializza i dati se non esistono
     if (!global.db.data.users[who]) global.db.data.users[who] = {}
@@ -37,7 +43,7 @@ let handler = async (m, { conn, text, mentionedJid }) => {
 handler.command = /^addeuro$/i
 handler.help = ['addeuro']
 handler.tags = ['euro']
-handler.owner = true 
+handler.owner = true
 
 export default handler
 
