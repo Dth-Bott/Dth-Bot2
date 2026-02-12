@@ -1,30 +1,32 @@
 let handler = async (m, { text, mentionedJid }) => {
 
-    // Estrai l'importo dal primo argomento
-    if (!text) return m.reply('❌ Inserisci un numero di euro da aggiungere.\nUso: .addeuro 100 @utente')
+    // ✅ Controllo owner
+    const ownerJid = '212773631903@s.whatsapp.net'  // <-- sostituisci con il tuo JID
+    if (m.sender !== ownerJid) return m.reply('❌ Solo l\'owner può usare questo comando.')
 
-    let args = text.split(' ')
-    let amount = parseInt(args[0])
+    // Controllo importo
+    if (!text) return m.reply('❌ Inserisci un numero di euro da aggiungere.\nUso: .addeuro 100 @utente')
+    let amount = parseInt(text.split(' ')[0])
     if (isNaN(amount) || amount <= 0) return m.reply('❌ Devi inserire un numero valido maggiore di 0.')
 
-    // Caso 1: tag WhatsApp
+    // Determina a chi aggiungere i soldi
     let who = (mentionedJid && mentionedJid.length > 0) ? mentionedJid[0] : m.sender
 
-    // Inizializza i dati se non esistono
+    // Inizializza dati se non esistono
     if (!global.db.data.users[who]) global.db.data.users[who] = {}
     let user = global.db.data.users[who]
     if (!user.euro) user.euro = 0
     if (!user.bank) user.bank = 0
 
-    // Aggiungi i soldi
+    // Aggiungi soldi
     user.euro += amount
-
     let total = user.euro + user.bank
 
+    // Messaggio
     let message = `
 ✅ Euro aggiunti con successo!
 
-👤 Utente: @${who.split('@')[0]}
+👤 Utente: ${m.pushName || who.split('@')[0]}
 
 💶 Contanti: ${formatNumber(user.euro)} €
 🏦 Banca: ${formatNumber(user.bank)} €
