@@ -1,10 +1,6 @@
 let handler = async (m, { conn }) => {
 
-    let who = m.quoted
-        ? m.quoted.sender
-        : m.mentionedJid && m.mentionedJid[0]
-        ? m.mentionedJid[0]
-        : m.sender
+    let who = m.sender
 
     if (!(who in global.db.data.users))
         return m.reply('🚩 Utente non trovato nel database')
@@ -17,21 +13,16 @@ let handler = async (m, { conn }) => {
     let total = user.euro + user.bank
 
     let message = `
-╔═ 💼 𝑾𝑨𝑳𝑳𝑬𝑻 💼 ═╗
-║
-║ 👤 Utente: @${who.split('@')[0]}
-║
-║ 💶 Contanti
-║    ➜ ${formatNumber(user.euro)} €
-║
-║ 🏦 Banca
-║    ➜ ${formatNumber(user.bank)} €
-║
-║ ─────────────────
-║ 🧾 Totale
-║    ➜ ${formatNumber(total)} €
-║
-╚════════════════╝
+╔═ 💼 WALLET 💼 ═╗
+
+👤 Utente: @${who.split('@')[0]}
+
+💶 Contanti: ${formatNumber(user.euro)} €
+🏦 Banca: ${formatNumber(user.bank)} €
+─────────────────
+🧾 Totale: ${formatNumber(total)} €
+
+╚═══════════════╝
 `.trim()
 
     await m.reply(message, null, { mentions: [who] })
@@ -39,7 +30,7 @@ let handler = async (m, { conn }) => {
 
 handler.help = ['wallet']
 handler.tags = ['euro']
-handler.command = ['wallet', 'soldi', 'saldo', 'portafoglio']
+handler.command = /^(wallet|soldi|saldo|portafoglio)$/i
 handler.register = true
 
 export default handler
