@@ -30,5 +30,5 @@ let handler = async (m, { args }) => {
 handler.help = ['prelievo <numero|all>']
 handler.tags = ['economy', 'rpg']
 handler.command = ['prelievo', 'preleva', 'with', 'w']
-handler.register = true
+
 export default handler
