@@ -2,20 +2,40 @@ let tassa = 0.02 // 2%
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
 
-  if (!m.mentionedJid[0]) {
+  let who
+
+  // 📌 Se è in gruppo
+  if (m.isGroup) {
+    if (m.mentionedJid[0]) {
+      who = m.mentionedJid[0]
+    } else if (m.quoted) {
+      who = m.quoted.sender
+    }
+  } else {
+    // 📌 Se è in privato
+    who = m.chat
+  }
+
+  if (!who) {
     return m.reply(
-      `🚩 ERRORE\n\n` +
-      `Devi menzionare un utente.\n\n` +
-      `📌 Esempio:\n${usedPrefix + command} @utente 100`
+      `🚩 Devi menzionare o rispondere a un utente.\n\n` +
+      `Esempio:\n${usedPrefix + command} @utente 100\n` +
+      `oppure rispondi al messaggio con:\n${usedPrefix + command} 100`
     )
   }
 
-  let who = m.mentionedJid[0]
+  if (who === m.sender) {
+    return m.reply('⚠️ Non puoi inviare soldi a te stesso.')
+  }
 
-  let txt = text.replace('@' + who.split('@')[0], '').trim()
+  if (!text) {
+    return m.reply('🚩 Inserisci la quantità di euro da trasferire.')
+  }
 
-  if (!txt) {
-    return m.reply('🚩 Inserisci la quantità di 💶 euro da trasferire')
+  // Se ha menzionato qualcuno, rimuoviamo la menzione dal testo
+  let txt = text
+  if (m.mentionedJid[0]) {
+    txt = text.replace('@' + who.split('@')[0], '').trim()
   }
 
   if (isNaN(txt)) {
@@ -42,14 +62,14 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     return m.reply('❌ Saldo insufficiente.')
   }
 
-  // Transazione
+  // 💸 Transazione
   users[m.sender].euro -= costoTotale
   users[who].euro += euro
 
   await m.reply(
     `🏦 BONIFICO ESEGUITO\n\n` +
     `💸 Inviati: -${euro} €\n` +
-    `🧾 Tassa (2%): -${tassaImporto} €\n\n` +
+    `🧾 Tassa (2%): -${tassaImporto} €\n` +
     `📉 Totale scalato: ${costoTotale} €`
   )
 
@@ -64,8 +84,9 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   global.db.write()
 }
 
-handler.help = ['bonifico @user <euro>']
+handler.help = ['bonifico @user <euro>', 'dona <euro> (rispondendo al messaggio)']
 handler.tags = ['euro']
 handler.command = /^(bonifico|dona)$/i
+handler.register = true
 
 export default handler
