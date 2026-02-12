@@ -5,9 +5,18 @@ const handler = async (m, { conn, isAdmin }) => {
         return m.reply('⛔ *Solo gli admin del gruppo possono usare questo comando.*')
     }
 
-    // Controllo se il messaggio citato esiste e sia un'immagine
-    if (!m.quoted || !m.quoted.message || !m.quoted.message.imageMessage) {
+    // Recupera il messaggio citato in maniera flessibile
+    const quotedMsg = m.quoted?.message || m.message?.extendedTextMessage?.contextInfo?.quotedMessage
+
+    if (!quotedMsg) {
         return m.reply('⚠️ Rispondi a un\'immagine con il comando per cambiare la foto del gruppo.')
+    }
+
+    // Controlla se il messaggio è un'immagine o un documento immagine
+    const isImage = quotedMsg.imageMessage || (quotedMsg.documentMessage && quotedMsg.documentMessage.mimetype?.startsWith('image/'))
+
+    if (!isImage) {
+        return m.reply('⚠️ Rispondi a un\'immagine valida per cambiare la foto del gruppo.')
     }
 
     // Controllo che sia un gruppo
@@ -17,7 +26,7 @@ const handler = async (m, { conn, isAdmin }) => {
 
     try {
         // Scarica l'immagine citata
-        const buffer = await conn.downloadMediaMessage(m.quoted)
+        const buffer = await conn.downloadMediaMessage({ message: quotedMsg })
 
         // Cambia la foto del gruppo
         await conn.groupUpdateProfilePicture(m.chat, buffer)
@@ -35,7 +44,6 @@ handler.help = ['setpic']
 handler.tags = ['group']
 handler.command = /^setpic$/i
 handler.group = true
-handler.admin = true
 handler.botAdmin = true
 
 export default handler
