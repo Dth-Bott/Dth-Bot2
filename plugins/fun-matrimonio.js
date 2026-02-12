@@ -1,5 +1,6 @@
 const proposals = {}
 const adoptions = {}
+const lovers = {}
 
 let handler = async (m, { conn, command, usedPrefix, participants }) => {
     const users = global.db.data.users
@@ -7,22 +8,22 @@ let handler = async (m, { conn, command, usedPrefix, participants }) => {
 
     switch (command) {
         case 'sposa':
-            return sposa(m, conn, users, usedPrefix, participants)
+            return sposa(m, conn, users, usedPrefix)
         case 'divorzia':
             return divorzia(m, users)
         case 'adotta':
-            return adotta(m, conn, users, usedPrefix, participants)
+            return adotta(m, conn, users, usedPrefix)
         case 'famiglia':
-            return famiglia(m, users, participants)
-        case 'coppie':
-            return coppie(m, users, participants)
+            return famiglia(m, users)
         case 'toglifiglio':
-            return togliFiglio(m, users, participants)
+            return togliFiglio(m, users)
+        case 'amante':
+            return amante(m, conn, users, usedPrefix)
     }
 }
 
 /* ================= 💍 MATRIMONIO ================= */
-async function sposa(m, conn, users, usedPrefix, participants) {
+async function sposa(m, conn, users, usedPrefix) {
     const sender = m.sender
     const target = m.mentionedJid?.[0] || m.quoted?.sender
 
@@ -42,7 +43,7 @@ async function sposa(m, conn, users, usedPrefix, participants) {
     proposals[sender] = target
 
     await conn.sendMessage(m.chat, {
-        text: 
+        text:
 `💖 *PROPOSTA DI MATRIMONIO* 💖
 
 ${tagUser(sender)} vuole sposare ${tagUser(target)} 💍
@@ -62,8 +63,49 @@ ${tagUser(sender)} vuole sposare ${tagUser(target)} 💍
     }, 60000)
 }
 
+/* ================= 🔥 AMANTE ================= */
+async function amante(m, conn, users, usedPrefix) {
+    const sender = m.sender
+    const target = m.mentionedJid?.[0] || m.quoted?.sender
+
+    if (!target) throw `Usa: ${usedPrefix}amante @utente`
+    if (target === sender) throw '❌ Non puoi essere amante di te stesso'
+    if (!users[target]) users[target] = {}
+
+    if (users[sender].amante)
+        throw `🔥 Hai già un amante: ${tagUser(users[sender].amante)}`
+    if (users[target].amante)
+        throw `🔥 ${tagUser(target)} ha già un amante`
+
+    if (lovers[sender] || lovers[target])
+        throw '⏳ C’è già una proposta amante in corso'
+
+    lovers[target] = sender
+    lovers[sender] = target
+
+    await conn.sendMessage(m.chat, {
+        text:
+`🔥 *PROPOSTA DI AMANTE* 🔥
+
+${tagUser(sender)} vuole che ${tagUser(target)} diventi il suo amante 😏
+
+💬 Rispondi con:
+✔️ *SI* per accettare  
+❌ *NO* per rifiutare`,
+        mentions: [sender, target]
+    })
+
+    setTimeout(() => {
+        if (lovers[target]) {
+            delete lovers[target]
+            delete lovers[sender]
+            conn.sendMessage(m.chat, { text: '⏳ Proposta amante scaduta.' })
+        }
+    }, 60000)
+}
+
 /* ================= 👨‍👩‍👧 ADOZIONE ================= */
-async function adotta(m, conn, users, usedPrefix, participants) {
+async function adotta(m, conn, users, usedPrefix) {
     const sender = m.sender
     const target = m.mentionedJid?.[0] || m.quoted?.sender
 
@@ -97,7 +139,7 @@ ${tagUser(sender)} vuole adottare ${tagUser(target)} 💖
 }
 
 /* ================= 📜 FAMIGLIA ================= */
-function famiglia(m, users, participants) {
+function famiglia(m, users) {
     const user = users[m.sender]
     let txt = `👨‍👩‍👧 *FAMIGLIA DI ${tagUser(m.sender)}*\n\n`
     let mentions = [m.sender]
@@ -106,6 +148,12 @@ function famiglia(m, users, participants) {
     if (user.sposato && user.coniuge) {
         txt += `• ${tagUser(user.coniuge)}\n`
         mentions.push(user.coniuge)
+    } else txt += '• Nessuno\n'
+
+    txt += '\n🔥 *Amante*\n'
+    if (user.amante) {
+        txt += `• ${tagUser(user.amante)}\n`
+        mentions.push(user.amante)
     } else txt += '• Nessuno\n'
 
     txt += '\n👤 *Genitori*\n'
@@ -144,6 +192,22 @@ function divorzia(m, users) {
     m.reply('💔 Matrimonio terminato. Ora siete divorziati.')
 }
 
+/* ================= ❌ TOGLI FIGLIO ================= */
+function togliFiglio(m, users) {
+    const user = users[m.sender]
+    const target = m.mentionedJid?.[0] || m.quoted?.sender
+    if (!target) throw 'Usa: .toglifiglio @utente'
+
+    if (!user.figli?.includes(target))
+        throw '❌ Questa persona non è tuo figlio'
+
+    user.figli = user.figli.filter(f => f !== target)
+    users[target].genitori =
+        users[target].genitori?.filter(g => g !== m.sender)
+
+    m.reply(`✅ ${tagUser(target)} non è più tuo figlio`, null, { mentions: [target] })
+}
+
 /* ================= 🔒 CONFERME ================= */
 handler.before = async (m, { conn }) => {
     if (!m.text) return
@@ -177,6 +241,31 @@ handler.before = async (m, { conn }) => {
         }
     }
 
+    /* AMANTE */
+    if (lovers[m.sender]) {
+        const from = lovers[m.sender]
+        const to = m.sender
+
+        if (txt === 'si' || txt === 'sì') {
+            users[from].amante = to
+            users[to].amante = from
+
+            delete lovers[from]
+            delete lovers[to]
+
+            return conn.sendMessage(m.chat, {
+                text: `🔥 ${tagUser(from)} e ${tagUser(to)} ora sono amanti 😏`,
+                mentions: [from, to]
+            })
+        }
+
+        if (txt === 'no') {
+            delete lovers[from]
+            delete lovers[to]
+            return m.reply('❌ Proposta amante rifiutata')
+        }
+    }
+
     /* ADOZIONE */
     if (adoptions[m.sender]) {
         const from = adoptions[m.sender]
@@ -186,13 +275,6 @@ handler.before = async (m, { conn }) => {
             users[to].genitori = [from]
             users[from].figli = users[from].figli || []
             users[from].figli.push(to)
-
-            if (users[from].sposato && users[from].coniuge) {
-                const partner = users[from].coniuge
-                users[partner].figli = users[partner].figli || []
-                users[partner].figli.push(to)
-                users[to].genitori.push(partner)
-            }
 
             delete adoptions[to]
 
@@ -209,49 +291,12 @@ handler.before = async (m, { conn }) => {
     }
 }
 
-/* ================= 💖 COPPIE ================= */
-function coppie(m, users, participants) {
-    let txt = '💖 *COPPIE SPOSATE NEL GRUPPO*\n\n'
-    const mentions = []
-    let found = false
-
-    for (let p of participants) {
-        const u = users[p.id]
-        if (!u?.sposato || !u.coniuge) continue
-        if (mentions.includes(p.id)) continue
-
-        txt += `• ${tagUser(p.id)} ❤️ ${tagUser(u.coniuge)}\n`
-        mentions.push(p.id, u.coniuge)
-        found = true
-    }
-
-    if (!found) txt += 'Nessuna coppia al momento 😔'
-    m.reply(txt, null, { mentions })
-}
-
-/* ================= ❌ TOGLI FIGLIO ================= */
-function togliFiglio(m, users, participants) {
-    const user = users[m.sender]
-    const target = m.mentionedJid?.[0] || m.quoted?.sender
-    if (!target) throw 'Usa: .toglifiglio @utente'
-
-    if (!user.figli?.includes(target))
-        throw '❌ Questa persona non è tuo figlio'
-
-    user.figli = user.figli.filter(f => f !== target)
-    users[target].genitori =
-        users[target].genitori?.filter(g => g !== m.sender)
-
-    m.reply(`✅ ${tagUser(target)} non è più tuo figlio`, null, { mentions: [target] })
-}
-
 /* ================= 🏷️ TAG ================= */
 function tagUser(jid) {
     return '@' + jid.split('@')[0]
 }
 
-/* ================= COMANDI ================= */
-handler.command = ['sposa', 'divorzia', 'adotta', 'famiglia', 'coppie', 'toglifiglio']
+handler.command = ['sposa', 'divorzia', 'adotta', 'famiglia', 'toglifiglio', 'amante']
 handler.group = true
 
 export default handler
