@@ -7,24 +7,8 @@ let handler = async (m, { text, mentionedJid }) => {
     let amount = parseInt(args[0])
     if (isNaN(amount) || amount <= 0) return m.reply('❌ Devi inserire un numero valido maggiore di 0.')
 
-    let who
-
     // Caso 1: tag WhatsApp
-    if (mentionedJid && mentionedJid.length > 0) {
-        who = mentionedJid[0]
-    } 
-    // Caso 2: tag scritto manualmente, tipo @nome
-    else if (args[1] && args[1].startsWith('@')) {
-        let username = args[1].replace('@','')
-        // cerca tra gli utenti registrati
-        let found = Object.keys(global.db.data.users).find(u => u.includes(username))
-        if (found) who = found
-        else return m.reply('❌ Utente non trovato.')
-    } 
-    // Caso 3: nessun tag → chi scrive il messaggio
-    else {
-        who = m.sender
-    }
+    let who = (mentionedJid && mentionedJid.length > 0) ? mentionedJid[0] : m.sender
 
     // Inizializza i dati se non esistono
     if (!global.db.data.users[who]) global.db.data.users[who] = {}
@@ -54,7 +38,6 @@ let handler = async (m, { text, mentionedJid }) => {
 handler.command = /^addeuro$/i
 handler.help = ['addeuro']
 handler.tags = ['euro']
-handler.owner = true 
 
 export default handler
 
