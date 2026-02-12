@@ -14,10 +14,10 @@ let handler = async (m, { conn }) => {
     let name = await conn.getName(who)
 
     // Sistema soldi VareBot
-    if (!user.money) user.money = 0
+    if (!user.euro) user.euro = 0
     if (!user.bank) user.bank = 0
 
-    let total = user.money + user.bank
+    let total = user.euro + user.bank
 
     let message = `
 ╔═ 💼 𝑾𝑨𝑳𝑳𝑬𝑻 💼 ═╗
@@ -25,7 +25,7 @@ let handler = async (m, { conn }) => {
 ║ 👤 𝑼𝒕𝒆𝒏𝒕𝒆: ${name}
 ║
 ║ 💶 𝑪𝒐𝒏𝒕𝒂𝒏𝒕𝒊
-║    ➜ ${formatNumber(user.money)} €
+║    ➜ ${formatNumber(user.euro)} €
 ║
 ║ 🏦 𝑩𝒂𝒏𝒄𝒂
 ║    ➜ ${formatNumber(user.bank)} €
@@ -43,7 +43,7 @@ let handler = async (m, { conn }) => {
 }
 
 handler.help = ['wallet']
-handler.tags = ['economy']
+handler.tags = ['euro']
 handler.command = ['soldi', 'wallet', 'portafoglio', 'saldo', 'euro']
 handler.register = true
 
