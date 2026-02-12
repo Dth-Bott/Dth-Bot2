@@ -8,15 +8,16 @@ let handler = async (m, { conn }) => {
         : m.sender
 
     if (!(who in global.db.data.users))
-        throw '🚩 Il bot non è stato trovato nel database'
+        throw '🚩 Utente non trovato nel database'
 
     let user = global.db.data.users[who]
-    let name = conn.getName(who)
+    let name = await conn.getName(who)
 
-    if (!user.limit) user.limit = 15000
+    // Sistema soldi VareBot
+    if (!user.money) user.money = 0
     if (!user.bank) user.bank = 0
 
-    let total = user.limit + user.bank
+    let total = user.money + user.bank
 
     let message = `
 ╔═ 💼 𝑾𝑨𝑳𝑳𝑬𝑻 💼 ═╗
@@ -24,7 +25,7 @@ let handler = async (m, { conn }) => {
 ║ 👤 𝑼𝒕𝒆𝒏𝒕𝒆: ${name}
 ║
 ║ 💶 𝑪𝒐𝒏𝒕𝒂𝒏𝒕𝒊
-║    ➜ ${formatNumber(user.limit)} €
+║    ➜ ${formatNumber(user.money)} €
 ║
 ║ 🏦 𝑩𝒂𝒏𝒄𝒂
 ║    ➜ ${formatNumber(user.bank)} €
@@ -36,17 +37,7 @@ let handler = async (m, { conn }) => {
 ╚════════════════╝
 `.trim()
 
-    await conn.sendMessage(m.chat, {
-        text: message,
-        contextInfo: {
-            forwardingScore: 99,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '',
-                newsletterName: 'Dth-Bot'
-            }
-        }
-    }, { quoted: m })
+    await conn.sendMessage(m.chat, { text: message }, { quoted: m })
 
     m.react('💶')
 }
