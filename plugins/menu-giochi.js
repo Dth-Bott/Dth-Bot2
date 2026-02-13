@@ -29,6 +29,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}comunista 💂🏻
 ➤ ${usedPrefix}bisex 👙
 ➤ ${usedPrefix}gay 🏳️‍🌈
+➤ ${usedPrefix}simpcard 🃏
 ➤ ${usedPrefix}trans 🏳️‍⚧️
 ➤ ${usedPrefix}tris ❌⭕
 ➤ ${usedPrefix}bandiera 🚩
