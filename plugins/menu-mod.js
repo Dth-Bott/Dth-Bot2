@@ -23,6 +23,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}menuowner     🔥 Menu Owner
 ➤ ${usedPrefix}menugruppo    🏹 Menu Gruppo
 ➤ ${usedPrefix}funzioni      ✨ Funzioni extra
+➤ ${usedPrefix}menugiochi    🎮 Menu Giochi
 
 ════════════════════
 🔖 Versione: *1.0*
