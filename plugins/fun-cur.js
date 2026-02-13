@@ -128,7 +128,7 @@ const handler = async (m, { conn, usedPrefix, text, command }) => {
   const userInfo = await getUserInfo(username)
   const likes = getLikesReceived(username)
 
-  const caption =
+  const menu =
 `🎧 ${nowPlaying ? '*IN RIPRODUZIONE ORA* 🔥' : '*Ultimo brano ascoltato*'}
 
 👤 Utente: @${m.sender.split('@')[0]}
@@ -139,35 +139,29 @@ const handler = async (m, { conn, usedPrefix, text, command }) => {
 📈 Tue riproduzioni: ${info?.userplaycount || 0}
 🌍 Globali: ${info?.playcount || 0}
 📊 Totale scrobble: ${userInfo?.playcount || 0}
-🔥 Likes ricevuti: ${likes}`
+🔥 Likes ricevuti: ${likes}
 
-  const buttons = [
-    { buttonId: `${usedPrefix}like`, buttonText: { displayText: '❤️ Metti Like' }, type: 1 },
-    { buttonId: `${usedPrefix}testo`, buttonText: { displayText: '📝 TESTO' }, type: 1 },
-    { buttonId: `${usedPrefix}topartists`, buttonText: { displayText: '👑 Top Artisti' }, type: 1 }
-  ]
+━━━━━━━━━━━━━━━
+📌 *Comandi disponibili:*
+
+❤️ ${usedPrefix}like
+📝 ${usedPrefix}testo
+👑 ${usedPrefix}topartists
+━━━━━━━━━━━━━━━`
 
   if (image) {
-    await conn.sendButtonText(
-      m.chat,
-      buttons,
-      caption,
-      `🎵 Last.fm • ${username}`,
-      m,
-      { mentions: [m.sender] }
-    )
+    await conn.sendMessage(m.chat, {
+      image: { url: image },
+      caption: menu,
+      mentions: [m.sender]
+    }, { quoted: m })
   } else {
-    await conn.sendButtonText(
-      m.chat,
-      buttons,
-      caption,
-      `🎵 Last.fm • ${username}`,
-      m,
-      { mentions: [m.sender] }
-    )
+    await conn.sendMessage(m.chat, {
+      text: menu,
+      mentions: [m.sender]
+    }, { quoted: m })
   }
 }
-
   // ❤️ LIKE
   if (command === 'like') {
     const track = await getRecentTrack(username)
