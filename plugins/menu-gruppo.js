@@ -18,21 +18,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}s / sticker
 ➤ ${usedPrefix}wm
 
-🎮 𝐆𝐈𝐎𝐂𝐇𝐈 & 𝐑𝐀𝐍𝐃𝐎𝐌
-➤ ${usedPrefix}tris ⭕
-➤ ${usedPrefix}slot 🎰
-➤ ${usedPrefix}bandiera 🏳️
-➤ ${usedPrefix}classificabandiera 🚩
-➤ ${usedPrefix}impiccato 👤
-
 👤 𝐓𝐀𝐆 & 𝐈𝐍𝐓𝐄𝐑𝐀𝐙𝐈𝐎𝐍𝐈
-➤ ${usedPrefix}bonk [@]
-➤ ${usedPrefix}hornycard [@]
-➤ ${usedPrefix}stupido [@]
-➤ ${usedPrefix}wanted [@]
-➤ ${usedPrefix}nokia [@]
-➤ ${usedPrefix}carcere [@]
-➤ ${usedPrefix}fight [@]
 ➤ ${usedPrefix}sbirro [@]
 ➤ ${usedPrefix}teletrasporto [@]
 ➤ ${usedPrefix}rincoglionito [@]
