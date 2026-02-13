@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-import ffmpeg from 'fluent-ffmpeg';
 import { promises as fs } from 'fs';
 import { join } from 'path';
 
@@ -11,9 +10,10 @@ const effetti = {
     wasted: { api: 'sra', path: 'overlay/wasted' },
     bisex: { api: 'sra', path: 'misc/bisexual' },
     comunista: { api: 'sra', path: 'overlay/comrade' },
+    simpcard: { api: 'sra', path: 'misc/simpcard' },
 };
 
-let handler = async (m, { conn, text, usedPrefix, command }) => {
+let handler = async (m, { conn, usedPrefix, command }) => {
     const effect = command.toLowerCase();
     const config = effetti[effect];
 
@@ -50,8 +50,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     }
 };
 
-handler.help = ['wasted', 'bisex', 'comunista'];
+handler.help = ['wasted', 'bisex', 'comunista', 'simpcard'];
 handler.tags = ['giochi'];
-handler.command = /^(wasted|bisex|comunista)$/i;
+handler.command = /^(wasted|bisex|comunista|simpcard)$/i;
 
 export default handler;
