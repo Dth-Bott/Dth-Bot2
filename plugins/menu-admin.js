@@ -45,6 +45,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}menumod               🛡️ Menu Mod
 ➤ ${usedPrefix}menugruppo            🏹 Menu Gruppo
 ➤ ${usedPrefix}menusicurezza         🛡️ Menu Sicurezza
+➤ ${usedPrefix}menugiochi            🎮 Menu Giochi
 
 ════════════════════
 🔖 Versione: *1.0*
