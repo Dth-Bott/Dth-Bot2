@@ -96,6 +96,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}menuadmin
 ➤ ${usedPrefix}menuowner
 ➤ ${usedPrefix}funzioni
+➤ ${usedPrefix}menugiochi
 
 ════════════════════
 🔖 Versione: *1.0*
