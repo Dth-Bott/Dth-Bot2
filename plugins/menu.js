@@ -26,6 +26,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}menugruppo   🏹 Menu Gruppo
 ➤ ${usedPrefix}menuadmin    ⚔️ Menu Admin
 ➤ ${usedPrefix}funzioni     ✨ Funzioni Extra
+➤ ${usedPrefix}menugiochi   🎮 Menu Giochi
 
 ════════════════════
 💀 Digita i comandi sopra per esplorare i misteri di SACRIFICE
