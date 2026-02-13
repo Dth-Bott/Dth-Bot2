@@ -114,21 +114,21 @@ const handler = async (m, { conn, usedPrefix, text, command }) => {
   // 🎧 ORA IN RIPRODUZIONE
   if (command === 'cur') {
 
-    const track = await getRecentTrack(username)
-    if (!track)
-      return conn.sendMessage(m.chat, { text: '❌ Nessuna traccia trovata.' })
+  const track = await getRecentTrack(username)
+  if (!track)
+    return conn.sendMessage(m.chat, { text: '❌ Nessuna traccia trovata.' })
 
-    const nowPlaying = track['@attr']?.nowplaying === 'true'
-    const artist = track.artist?.['#text']
-    const title = track.name
-    const album = track.album?.['#text']
-    const image = track.image?.pop()?.['#text']
+  const nowPlaying = track['@attr']?.nowplaying === 'true'
+  const artist = track.artist?.['#text']
+  const title = track.name
+  const album = track.album?.['#text']
+  const image = track.image?.pop()?.['#text']
 
-    const info = await getTrackInfo(username, artist, title)
-    const userInfo = await getUserInfo(username)
-    const likes = getLikesReceived(username)
+  const info = await getTrackInfo(username, artist, title)
+  const userInfo = await getUserInfo(username)
+  const likes = getLikesReceived(username)
 
-    const caption =
+  const caption =
 `🎧 ${nowPlaying ? '*IN RIPRODUZIONE ORA* 🔥' : '*Ultimo brano ascoltato*'}
 
 👤 Utente: @${m.sender.split('@')[0]}
@@ -141,29 +141,32 @@ const handler = async (m, { conn, usedPrefix, text, command }) => {
 📊 Totale scrobble: ${userInfo?.playcount || 0}
 🔥 Likes ricevuti: ${likes}`
 
-    const buttons = [
-      { buttonId: `${usedPrefix}like`, buttonText: { displayText: '❤️ Metti Like' }, type: 1 },
-      { buttonId: `${usedPrefix}testo`, buttonText: { displayText: '📝 TESTO' }, type: 1 },
-      { buttonId: `${usedPrefix}topartists`, buttonText: { displayText: '👑 Top Artisti' }, type: 1 }
-    ]
+  const buttons = [
+    { buttonId: `${usedPrefix}like`, buttonText: { displayText: '❤️ Metti Like' }, type: 1 },
+    { buttonId: `${usedPrefix}testo`, buttonText: { displayText: '📝 TESTO' }, type: 1 },
+    { buttonId: `${usedPrefix}topartists`, buttonText: { displayText: '👑 Top Artisti' }, type: 1 }
+  ]
 
-    if (image) {
-      await conn.sendMessage(m.chat, {
-        image: { url: image },
-        caption,
-        footer: `🎵 Last.fm • ${username}`,
-        buttons,
-        headerType: 4
-      }, { quoted: m })
-    } else {
-      await conn.sendMessage(m.chat, {
-        text: caption,
-        footer: `🎵 Last.fm • ${username}`,
-        buttons,
-        headerType: 1
-      }, { quoted: m })
-    }
+  if (image) {
+    await conn.sendButtonText(
+      m.chat,
+      buttons,
+      caption,
+      `🎵 Last.fm • ${username}`,
+      m,
+      { mentions: [m.sender] }
+    )
+  } else {
+    await conn.sendButtonText(
+      m.chat,
+      buttons,
+      caption,
+      `🎵 Last.fm • ${username}`,
+      m,
+      { mentions: [m.sender] }
+    )
   }
+}
 
   // ❤️ LIKE
   if (command === 'like') {
