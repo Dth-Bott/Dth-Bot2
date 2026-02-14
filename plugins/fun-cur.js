@@ -8,7 +8,7 @@ const LIKES_FILE = path.join(__dirname, '../song_likes.json')
 if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, '{}')
 if (!fs.existsSync(LIKES_FILE)) fs.writeFileSync(LIKES_FILE, '{}')
 
-const LASTFM_API_KEY = 'INSERISCI_LA_TUA_API_KEY'
+const LASTFM_API_KEY = '36f859a1fc4121e7f0e931806507d5f9'
 
 // ================= FILE SYSTEM =================
 
