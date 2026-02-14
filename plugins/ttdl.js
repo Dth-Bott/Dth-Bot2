@@ -35,6 +35,5 @@ let handler = async (m, { conn, args }) => {
 handler.help = ['ttdl <link>'];
 handler.tags = ['downloader'];
 handler.command = /^(ttdl)$/i;
-handler.register = true;
 
 export default handler;
