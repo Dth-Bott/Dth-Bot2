@@ -154,38 +154,34 @@ if (command === 'cur') {
 ━━━━━━━━━━━━━━━`
 
   const buttons = [
-    {
-      buttonId: `${usedPrefix}like ${username}`,
-      buttonText: { displayText: '❤️ Like' },
-      type: 1
-    },
-    {
-      buttonId: `${usedPrefix}testo ${username}`,
-      buttonText: { displayText: '📝 Testo' },
-      type: 1
-    },
-    {
-      buttonId: `${usedPrefix}topartists ${username}`,
-      buttonText: { displayText: '👑 Top Artists' },
-      type: 1
-    }
-  ]
+  {
+    name: "quick_reply",
+    buttonParamsJson: JSON.stringify({
+      display_text: "❤️ Like",
+      id: `${usedPrefix}like ${username}`
+    })
+  },
+  {
+    name: "quick_reply",
+    buttonParamsJson: JSON.stringify({
+      display_text: "📝 Testo",
+      id: `${usedPrefix}testo ${username}`
+    })
+  },
+  {
+    name: "quick_reply",
+    buttonParamsJson: JSON.stringify({
+      display_text: "👑 Top Artists",
+      id: `${usedPrefix}topartists ${username}`
+    })
+  }
+]
 
-  if (image) {
-    await conn.sendMessage(m.chat, {
-      image: { url: image },
-      caption,
-      footer: '🎵 Last.fm di ${username}',
-      buttons,
-      headerType: 4
-    }, { quoted: m })
-  } else {
-    await conn.sendMessage(m.chat, {
-      text: caption,
-      footer: '🎵 Last.fm di ${username}',
-      buttons,
-      headerType: 1
-    }, { quoted: m })
+await conn.sendMessage(m.chat, {
+  text: caption,
+  footer: '🎵 Last.fm Bot',
+  interactiveButtons: buttons
+}, { quoted: m })
   }
 }
 
