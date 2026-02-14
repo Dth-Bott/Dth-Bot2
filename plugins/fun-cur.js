@@ -169,17 +169,18 @@ const handler = async (m, { conn, usedPrefix, text, command }) => {
 ]
 
 await conn.sendMessage(m.chat, {
-  text: caption,
-  footer: '🎵 Last.fm Bot',
-  interactiveMessage: {
-    body: { text: caption },
-    footer: { text: '🎵 Last.fm Bot' },
-    nativeFlowMessage: {
-      buttons
+  viewOnceMessage: {
+    message: {
+      interactiveMessage: {
+        body: { text: caption },
+        footer: { text: '🎵 Last.fm Bot' },
+        nativeFlowMessage: {
+          buttons
+        }
+      }
     }
   }
 }, { quoted: m })
- }
 
   // ===== LIKE =====
   if (command === 'like') {
