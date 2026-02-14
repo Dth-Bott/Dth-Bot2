@@ -121,23 +121,24 @@ const handler = async (m, { conn, usedPrefix, text, command }) => {
     })
 
   // ===== CUR =====
-  if (command === 'cur') {
+  // ===== CUR =====
+if (command === 'cur') {
 
-    const track = await getRecentTrack(username)
-    if (!track)
-      return conn.sendMessage(m.chat, { text: '❌ Nessuna traccia trovata.' })
+  const track = await getRecentTrack(username)
+  if (!track)
+    return conn.sendMessage(m.chat, { text: '❌ Nessuna traccia trovata.' })
 
-    const nowPlaying = track['@attr']?.nowplaying === 'true'
-    const artist = track.artist?.['#text']
-    const title = track.name
-    const album = track.album?.['#text']
-    const image = track.image?.pop()?.['#text']
+  const nowPlaying = track['@attr']?.nowplaying === 'true'
+  const artist = track.artist?.['#text']
+  const title = track.name
+  const album = track.album?.['#text']
+  const image = track.image?.pop()?.['#text']
 
-    const info = await getTrackInfo(username, artist, title)
-    const userInfo = await getUserInfo(username)
-    const likes = getLikesReceived(username)
+  const info = await getTrackInfo(username, artist, title)
+  const userInfo = await getUserInfo(username)
+  const likes = getLikesReceived(username)
 
-    const caption =
+  const caption =
 `🎧 ${nowPlaying ? '*IN RIPRODUZIONE ORA* 🔥' : '*Ultimo brano ascoltato*'}
 
 👤 Last.fm: ${username}
@@ -150,23 +151,43 @@ const handler = async (m, { conn, usedPrefix, text, command }) => {
 📊 Totale scrobble: ${userInfo?.playcount || 0}
 🔥 Likes ricevuti: ${likes}
 
-━━━━━━━━━━━━━━━
-❤️ ${usedPrefix}like ${username}
-📝 ${usedPrefix}testo ${username}
-👑 ${usedPrefix}topartists ${username}
 ━━━━━━━━━━━━━━━`
 
-    if (image) {
-      await conn.sendMessage(m.chat, {
-        image: { url: image },
-        caption
-      }, { quoted: m })
-    } else {
-      await conn.sendMessage(m.chat, {
-        text: caption
-      }, { quoted: m })
+  const buttons = [
+    {
+      buttonId: `${usedPrefix}like ${username}`,
+      buttonText: { displayText: '❤️ Like' },
+      type: 1
+    },
+    {
+      buttonId: `${usedPrefix}testo ${username}`,
+      buttonText: { displayText: '📝 Testo' },
+      type: 1
+    },
+    {
+      buttonId: `${usedPrefix}topartists ${username}`,
+      buttonText: { displayText: '👑 Top Artists' },
+      type: 1
     }
+  ]
+
+  if (image) {
+    await conn.sendMessage(m.chat, {
+      image: { url: image },
+      caption,
+      footer: '🎵 Last.fm di ${username}',
+      buttons,
+      headerType: 4
+    }, { quoted: m })
+  } else {
+    await conn.sendMessage(m.chat, {
+      text: caption,
+      footer: '🎵 Last.fm di ${username}',
+      buttons,
+      headerType: 1
+    }, { quoted: m })
   }
+}
 
   // ===== LIKE =====
   if (command === 'like') {
