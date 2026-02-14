@@ -32,6 +32,7 @@ const handler = async (message, { conn, usedPrefix = '.' }) => {
 ➤ ${usedPrefix}simpcard 🃏
 ➤ ${usedPrefix}trans 🏳️‍⚧️
 ➤ ${usedPrefix}tris ❌⭕
+➤ ${usedPrefix}meme 🤣
 ➤ ${usedPrefix}cibo 🍣 
 ➤ ${usedPrefix}bandiera 🚩
 ➤ ${usedPrefix}classificabandiera 🏆
