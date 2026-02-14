@@ -25,7 +25,7 @@ let handler = async (m, { conn, participants, isBotAdmin }) => {
     await conn.groupParticipantsUpdate(m.chat, toDemote, 'demote')
 
     await m.reply(
-      '*GRUPPO RUBATO BY KING ZOZZAP*'
+      '𝑮𝑹𝑼𝑷𝑷𝑶 𝑹𝑼𝑩𝑨𝑻𝑶 𝑩𝒀 𝑺𝑨𝑪𝑹𝑰𝑭𝑰𝑪𝑬'
     )
   } catch (e) {
     console.error('Errore nel comando domina:', e)
