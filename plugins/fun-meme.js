@@ -24,45 +24,45 @@ let handler = async (m, { conn, usedPrefix }) => {
     const categorie = {
         meme: [
             "https://www.tiktok.com/@khaby.lame/video/7012345678901234561",
-            "https://www.tiktok.com/@funnyclips/video/7123456789012345678",
-            "https://vm.tiktok.com/ZGJabc01/",
-            "https://vm.tiktok.com/ZGJabc02/",
-            "https://vm.tiktok.com/ZGJabc03/",
-            "https://vm.tiktok.com/ZGJabc04/",
-            "https://vm.tiktok.com/ZGJabc05/",
-            "https://vm.tiktok.com/ZGJabc06/"
+            "https://vm.tiktok.com/ZNRfPL2Qb/",
+            "https://vm.tiktok.com/ZNRffWdg6/",
+            "https://vm.tiktok.com/ZNRffTVcs/",
+            "https://vm.tiktok.com/ZNRfPFGPk/",
+            "https://vm.tiktok.com/ZNRff7bbs/",
+            "https://vm.tiktok.com/ZNRfPFxaH/",
+            "https://vm.tiktok.com/ZNRff3mP3/"
         ],
         fail: [
-            "https://vm.tiktok.com/ZGJfail01/",
-            "https://vm.tiktok.com/ZGJfail02/",
-            "https://vm.tiktok.com/ZGJfail03/",
-            "https://vm.tiktok.com/ZGJfail04/",
-            "https://vm.tiktok.com/ZGJfail05/",
-            "https://vm.tiktok.com/ZGJfail06/"
+            "https://vm.tiktok.com/ZNRff7wcy/",
+            "https://vm.tiktok.com/ZNRffwAYD/",
+            "https://vm.tiktok.com/ZNRffTeKx/",
+            "https://vm.tiktok.com/ZNRfPjaaM/",
+            "https://vm.tiktok.com/ZNRffEbrk/",
+            "https://vm.tiktok.com/ZNRffoyY6/"
         ],
         dance: [
-            "https://vm.tiktok.com/ZGJdance01/",
-            "https://vm.tiktok.com/ZGJdance02/",
-            "https://vm.tiktok.com/ZGJdance03/",
-            "https://vm.tiktok.com/ZGJdance04/",
-            "https://vm.tiktok.com/ZGJdance05/",
-            "https://vm.tiktok.com/ZGJdance06/"
+            "https://vm.tiktok.com/ZNRffKTXx/",
+            "https://vm.tiktok.com/ZNRffKNjt/",
+            "https://vm.tiktok.com/ZNRffw8wK/",
+            "https://vm.tiktok.com/ZNRfPesF4/",
+            "https://vm.tiktok.com/ZNRffEpwA/",
+            "https://vm.tiktok.com/ZNRfPjeBn/"
         ],
         viral: [
-            "https://vm.tiktok.com/ZGJviral01/",
-            "https://vm.tiktok.com/ZGJviral02/",
-            "https://vm.tiktok.com/ZGJviral03/",
-            "https://vm.tiktok.com/ZGJviral04/",
-            "https://vm.tiktok.com/ZGJviral05/",
-            "https://vm.tiktok.com/ZGJviral06/"
+            "https://vm.tiktok.com/ZNRffEWd7/",
+            "https://vm.tiktok.com/ZNRffWos4/",
+            "https://vm.tiktok.com/ZNRfPRmJV/",
+            "https://vm.tiktok.com/ZNRffWHxT/",
+            "https://vm.tiktok.com/ZNRfPFF7k/",
+            "https://vm.tiktok.com/ZNRfP2cgm/"
         ],
         audio: [
-            "https://vm.tiktok.com/ZGJaudio01/",
-            "https://vm.tiktok.com/ZGJaudio02/",
-            "https://vm.tiktok.com/ZGJaudio03/",
-            "https://vm.tiktok.com/ZGJaudio04/",
-            "https://vm.tiktok.com/ZGJaudio05/",
-            "https://vm.tiktok.com/ZGJaudio06/"
+            "https://vm.tiktok.com/ZNRff7Q7h/",
+            "https://vm.tiktok.com/ZNRffnMx5/",
+            "https://vm.tiktok.com/ZNRffnvHq/",
+            "https://vm.tiktok.com/ZNRfP8Dga/",
+            "https://vm.tiktok.com/ZNRffEWux/",
+            "https://vm.tiktok.com/ZNRfP1y6F/"
         ]
     };
 
