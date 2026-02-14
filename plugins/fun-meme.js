@@ -90,6 +90,5 @@ handler.help = ['tiktokmeme'];
 handler.tags = ['divertimento'];
 handler.command = /^(meme)$/i;
 handler.group = true;
-handler.register = true;
 
 export default handler;
