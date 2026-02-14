@@ -1,6 +1,6 @@
 const playAgainButtons = (prefix) => [
     {
-        buttonId: `${prefix}tiktokmeme`,
+        buttonId: `${prefix}meme`,
         buttonText: { displayText: '🎥 Altro Meme TikTok' },
         type: 1
     }
@@ -23,7 +23,7 @@ let handler = async (m, { conn, usedPrefix }) => {
 
     const categorie = {
         meme: [
-            "https://www.tiktok.com/@khaby.lame/video/7012345678901234561",
+            "https://vm.tiktok.com/ZNRfPMFgv/",
             "https://vm.tiktok.com/ZNRfPL2Qb/",
             "https://vm.tiktok.com/ZNRffWdg6/",
             "https://vm.tiktok.com/ZNRffTVcs/",
@@ -80,7 +80,7 @@ let handler = async (m, { conn, usedPrefix }) => {
     };
 
     await conn.sendMessage(m.chat, {
-        text: `${emojiCategoria[randomCategory]} *TikTok ${randomCategory.toUpperCase()} Random!*\n\n🔗 ${randomLink}`,
+        text: `${emojiCategoria[randomCategory]} *TikTok ${randomCategory.toUpperCase()} Random!*\n\n🔗 ${randomLink}\n\n> usa: .ttdl (link) per scaricare il video`,
         buttons: playAgainButtons(usedPrefix),
         headerType: 1
     }, { quoted: m });
