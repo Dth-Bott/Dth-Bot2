@@ -44,7 +44,7 @@ let handler = async (m, { conn, args }) => {
 ❤️ ${data.data.digg_count} like
 👁️ ${data.data.play_count} views
 
-> vare ✧ bot`
+> 𝐒𝚫𝐂𝐑𝐈𝐅𝐈𝐂𝚵 𝚩𝚯𝐓`
         }, { quoted: m });
 
     } catch (err) {
