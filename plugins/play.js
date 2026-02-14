@@ -61,6 +61,5 @@ let handler = async (m, { conn, args }) => {
 handler.help = ['play <nome canzone>'];
 handler.tags = ['downloader'];
 handler.command = /^play$/i;
-handler.register = true;
 
 export default handler;
