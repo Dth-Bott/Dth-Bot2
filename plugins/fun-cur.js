@@ -145,42 +145,41 @@ const handler = async (m, { conn, usedPrefix, text, command }) => {
 🔥 Likes ricevuti: ${likes}`
 
     const buttons = [
-      {
-        name: "quick_reply",
-        buttonParamsJson: JSON.stringify({
-          display_text: "❤️ Like",
-          id: `${usedPrefix}like ${username}`
-        })
-      },
-      {
-        name: "quick_reply",
-        buttonParamsJson: JSON.stringify({
-          display_text: "📝 Testo",
-          id: `${usedPrefix}testo ${username}`
-        })
-      },
-      {
-        name: "quick_reply",
-        buttonParamsJson: JSON.stringify({
-          display_text: "👑 Top Artists",
-          id: `${usedPrefix}topartists ${username}`
-        })
-      }
-    ]
-
-    if (image) {
-      await conn.sendMessage(m.chat, {
-        image: { url: image },
-        caption
-      }, { quoted: m })
-    }
-
-    return await conn.sendMessage(m.chat, {
-      text: "Scegli un'opzione:",
-      footer: '🎵 Last.fm Bot',
-      interactiveButtons: buttons
-    }, { quoted: m })
+  {
+    name: "quick_reply",
+    buttonParamsJson: JSON.stringify({
+      display_text: "❤️ Like",
+      id: `${usedPrefix}like ${username}`
+    })
+  },
+  {
+    name: "quick_reply",
+    buttonParamsJson: JSON.stringify({
+      display_text: "📝 Testo",
+      id: `${usedPrefix}testo ${username}`
+    })
+  },
+  {
+    name: "quick_reply",
+    buttonParamsJson: JSON.stringify({
+      display_text: "👑 Top Artists",
+      id: `${usedPrefix}topartists ${username}`
+    })
   }
+]
+
+await conn.sendMessage(m.chat, {
+  text: caption,
+  footer: '🎵 Last.fm Bot',
+  interactiveMessage: {
+    body: { text: caption },
+    footer: { text: '🎵 Last.fm Bot' },
+    nativeFlowMessage: {
+      buttons
+    }
+  }
+}, { quoted: m })
+ }
 
   // ===== LIKE =====
   if (command === 'like') {
