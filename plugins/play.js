@@ -55,7 +55,7 @@ let handler = async (m, { conn, args }) => {
 
   } catch (err) {
     console.error("ERRORE PLAY:", err.response?.data || err.message);
-    m.reply("❌ Errore VPS durante il download.");
+    m.reply("❌ Errore, perchè? perché sono gay.");
   }
 };
 
