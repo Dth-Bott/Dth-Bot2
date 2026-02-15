@@ -38,7 +38,9 @@ ${lines.map(l => `➤ ${l}`).join('\n')}
       'antiporno, modoadmin',
       'benvenuto, addio',
       'antiprivato, antibot',
-      'antispam, antinuke'
+      'antispam, antinuke',
+      'antiinsta, antitelegram',
+      'antitiktok, antitag'
     ])
   }
 
@@ -58,6 +60,57 @@ ${lines.map(l => `➤ ${l}`).join('\n')}
         'Blocca portali WhatsApp proibiti'
       ])
       break
+
+    case 'antiinsta':
+  if (m.isGroup && !(isAdmin || isOwner || isROwner)) return m.reply(noAdmin)
+  if (chat.antiInsta === isEnable)
+    return m.reply(box('📸 𝐀𝐍𝐓𝐈𝐈𝐍𝐒𝐓𝐀', ['Il sigillo è già ' + (isEnable ? 'attivo' : 'disattivo')]))
+
+  chat.antiInsta = isEnable
+  result = box('📸 𝐀𝐍𝐓𝐈𝐈𝐍𝐒𝐓𝐀', [
+    `Stato rituale: ${isEnable ? '🟢 𝐀𝐓𝐓𝐈𝐕𝐎' : '🔴 𝐃𝐈𝐒𝐀𝐓𝐓𝐈𝐕𝐎'}`,
+    'Blocca link Instagram nel gruppo'
+  ])
+  break
+
+
+case 'antitelegram':
+  if (m.isGroup && !(isAdmin || isOwner || isROwner)) return m.reply(noAdmin)
+  if (chat.antiTelegram === isEnable)
+    return m.reply(box('✈️ 𝐀𝐍𝐓𝐈𝐓𝐄𝐋𝐄𝐆𝐑𝐀𝐌', ['Il sigillo è già ' + (isEnable ? 'attivo' : 'disattivo')]))
+
+  chat.antiTelegram = isEnable
+  result = box('✈️ 𝐀𝐍𝐓𝐈𝐓𝐄𝐋𝐄𝐆𝐑𝐀𝐌', [
+    `Stato rituale: ${isEnable ? '🟢 𝐀𝐓𝐓𝐈𝐕𝐎' : '🔴 𝐃𝐈𝐒𝐀𝐓𝐓𝐈𝐕𝐎'}`,
+    'Blocca link Telegram nel gruppo'
+  ])
+  break
+
+
+case 'antitiktok':
+  if (m.isGroup && !(isAdmin || isOwner || isROwner)) return m.reply(noAdmin)
+  if (chat.antiTiktok === isEnable)
+    return m.reply(box('🎵 𝐀𝐍𝐓𝐈𝐓𝐈𝐊𝐓𝐎𝐊', ['Il sigillo è già ' + (isEnable ? 'attivo' : 'disattivo')]))
+
+  chat.antiTiktok = isEnable
+  result = box('🎵 𝐀𝐍𝐓𝐈𝐓𝐈𝐊𝐓𝐎𝐊', [
+    `Stato rituale: ${isEnable ? '🟢 𝐀𝐓𝐓𝐈𝐕𝐎' : '🔴 𝐃𝐈𝐒𝐀𝐓𝐓𝐈𝐕𝐎'}`,
+    'Blocca link TikTok nel gruppo'
+  ])
+  break
+
+
+case 'antitag':
+  if (m.isGroup && !(isAdmin || isOwner || isROwner)) return m.reply(noAdmin)
+  if (chat.antiTag === isEnable)
+    return m.reply(box('🏷️ 𝐀𝐍𝐓𝐈𝐓𝐀𝐆', ['Il sigillo è già ' + (isEnable ? 'attivo' : 'disattivo')]))
+
+  chat.antiTag = isEnable
+  result = box('🏷️ 𝐀𝐍𝐓𝐈𝐓𝐀𝐆', [
+    `Stato rituale: ${isEnable ? '🟢 𝐀𝐓𝐓𝐈𝐕𝐎' : '🔴 𝐃𝐈𝐒𝐀𝐓𝐓𝐈𝐕𝐎'}`,
+    'Blocca tag e menzioni di massa'
+  ])
+  break
 
     case 'antinuke':
       if (!isOwner && !isROwner) return m.reply(noOwner)
