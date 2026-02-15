@@ -31,6 +31,12 @@ ${lines.join('\n')}
   if (chat.antiBot) active.push('🤖 𝐀𝐍𝐓𝐈𝐁𝐎𝐓')
   if (chat.antispam) active.push('🛑 𝐀𝐍𝐓𝐈𝐒𝐏𝐀𝐌')
 
+  // ====== NUOVI SIGILLI ======
+  if (chat.antiInsta) active.push('📸 𝐀𝐍𝐓𝐈𝐈𝐍𝐒𝐓𝐀')
+  if (chat.antiTelegram) active.push('✈️ 𝐀𝐍𝐓𝐈𝐓𝐄𝐋𝐄𝐆𝐑𝐀𝐌')
+  if (chat.antiTiktok) active.push('🎵 𝐀𝐍𝐓𝐈𝐓𝐈𝐊𝐓𝐎𝐊')
+  if (chat.antiTag) active.push('🏷️ 𝐀𝐍𝐓𝐈𝐓𝐀𝐆')
+
   // ====== FUNZIONI BOT ======
   if (bot.antiprivato) active.push('🔒 𝐀𝐍𝐓𝐈𝐏𝐑𝐈𝐕𝐀𝐓𝐎')
 
