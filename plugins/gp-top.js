@@ -1,12 +1,28 @@
-let handler = async (m, { conn, participants }) => {
-  if (!m.isGroup) return m.reply('Questo comando funziona solo nei gruppi.')
+import fs from 'fs'
 
-  let users = global.db.data.users
+let handler = async (m, { conn }) => {
+  if (!m.isGroup) 
+    return m.reply('Questo comando funziona solo nei gruppi.')
+
+  const dbPath = './database.json'
+
+  // Se il file non esiste, crealo
+  if (!fs.existsSync(dbPath)) {
+    fs.writeFileSync(dbPath, JSON.stringify({ users: {} }, null, 2))
+  }
+
+  // Leggi database
+  let raw = fs.readFileSync(dbPath)
+  let db = JSON.parse(raw)
+
+  // Assicurati che esista la struttura base
+  if (!db.users) db.users = {}
+
   let groupId = m.chat
 
-  let top = Object.entries(users)
+  let top = Object.entries(db.users)
     .map(([jid, data]) => {
-      let total = data.chats?.[groupId]?.chat || 0
+      let total = data?.chats?.[groupId]?.chat || 0
       return [jid, total]
     })
     .filter(([jid, total]) => total > 0)
@@ -34,4 +50,5 @@ let handler = async (m, { conn, participants }) => {
 
 handler.command = ['top']
 handler.tags = ['stats']
+
 export default handler
