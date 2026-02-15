@@ -23,6 +23,10 @@ const handler = async (m, { conn, usedPrefix = '.' }) => {
 ➤ 💣 AntiNuke → ${stato(chat.antinuke)}
 ➤ 🛑 AntiSpam → ${stato(chat.antispam)}
 ➤ 🤖 AntiBot → ${stato(chat.antiBot)}
+➤ 📸 AntiInsta → ${stato(chat.antiInsta)}
+➤ ✈️ AntiTelegram → ${stato(chat.antiTelegram)}
+➤ 🎵 AntiTiktok → ${stato(chat.antiTiktok)}
+➤ 🏷️ AntiTag → ${stato(chat.antiTag)}
 ➤ 🚫 AntiGore → ${stato(chat.antigore)}
 ➤ 🔞 AntiPorno → ${stato(chat.antiporno)}
 
